@@ -36,6 +36,7 @@ class LandingFirstPageWeb extends StatelessWidget {
                             Image.asset(
                               "images/1.png",
                               width: double.infinity,
+                              height: double.infinity,
                               fit: BoxFit.cover,
                             ),
                             Positioned(
@@ -54,7 +55,7 @@ class LandingFirstPageWeb extends StatelessWidget {
                             Image.asset(
                               "images/2.png",
                               width: double.infinity,
-
+                              height: double.infinity,
                               fit: BoxFit.cover,
                             ),
                             Positioned(
