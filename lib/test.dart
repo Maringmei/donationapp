@@ -104,7 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(onPressed: (){
               Razorpay razorpay = Razorpay();
               var options = {
-                'key': 'rzp_live_ILgsfZCZoFIKMb',
+              //  'key': 'rzp_live_ILgsfZCZoFIKMb', //razor test
+                'key': 'rzp_test_VdO7KK713OHMLX', //globizs test
                 'amount': 100,
                 'name': 'Acme Corp.',
                 'description': 'Fine T-Shirt',

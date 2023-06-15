@@ -4,6 +4,7 @@ class Assets {
 
   static const String images1 = 'assets/images/1.png';
   static const String images2 = 'assets/images/2.png';
+  static const String imagesDonatebackgroundd = 'assets/images/donatebackgroundd.png';
   static const String imagesTransparent = 'assets/images/transparent.png';
 
 }

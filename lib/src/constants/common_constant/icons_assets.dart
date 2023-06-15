@@ -8,7 +8,7 @@ import 'color_constant.dart';
 const i_user = Icon(Icons.account_circle);
 const i_lock = Icon(Icons.lock_outline);
 const i_notification = Icon(Icons.notifications);
-const i_menu = Icon(Icons.segment);
+const i_menu = Icon(Icons.segment,color: c_white,);
 const i_back = Icon(Icons.arrow_back_ios,size: 15,);
 const i_test = Icon(Icons.radar_outlined);
 const i_filter = Icon(Icons.filter_alt_outlined,size: 9,);

@@ -19,12 +19,14 @@ class TextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.zero,
+    //  padding: EdgeInsets.zero,
       child: Text('$text',
+
           style: GoogleFonts.inter(
               height: 1,
               color: t_color, fontWeight: fontWeight, fontSize: fontSize)
-              .copyWith()),
+              .copyWith()
+            ),
     );
   }
 }

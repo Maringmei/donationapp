@@ -33,8 +33,8 @@ class CardWidget extends StatelessWidget {
            //  ),
     ],
           color: color == null ? null : color,
-          border: color == null ? gradient == null ? Border.all(color: c_black) : null : null,
-          borderRadius: BorderRadius.circular(0),
+          border: color == null ? gradient == null ? Border.all(color: c_white) : null : null,
+          borderRadius: BorderRadius.circular(borderRadius),
           gradient: gradient == null ? null : LinearGradient(
             colors: gradient,
             begin: Alignment.centerLeft,

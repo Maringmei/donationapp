@@ -1,44 +1,43 @@
-import 'dart:convert';
 import 'dart:js_interop';
 
-import 'package:donationapp/src/bloc/ConfirmBloc/confirm_cubit.dart';
-import 'package:donationapp/src/bloc/DashboardBloc/dashboard_cubit.dart';
 import 'package:donationapp/src/bloc/HistoryBloc/history_cubit.dart';
-import 'package:donationapp/src/bloc/LoginBloc/login_cubit.dart';
 import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
-import 'package:donationapp/src/bloc/PayNowBloc/pay_now_cubit.dart';
-import 'package:donationapp/src/bloc/StatusBloc/status_cubit.dart';
-import 'package:donationapp/src/constants/common_constant/icons_assets.dart';
+import 'package:donationapp/src/constants/widget_constant/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:razorpay_web/razorpay_web.dart';
 
 import '../../../SizedConfig.dart';
 import '../../Storage/storage.dart';
 import '../../bloc/BeneficiariesBLoc/beneficiaries_cubit.dart';
+import '../../bloc/ConfirmBloc/confirm_cubit.dart';
 import '../../bloc/CreateAccountBloc/createaccount_cubit.dart';
+import '../../bloc/LoginBloc/login_cubit.dart';
+import '../../bloc/PayNowBloc/pay_now_cubit.dart';
+import '../../bloc/StatusBloc/status_cubit.dart';
 import '../../constants/common_constant/check_email.dart';
 import '../../constants/common_constant/color_constant.dart';
 import '../../constants/common_constant/currency_format.dart';
-import '../../constants/payment/payment.dart';
+import '../../constants/common_constant/icons_assets.dart';
 import '../../constants/widget_constant/custom_button.dart';
 import '../../constants/widget_constant/dialog_widget.dart';
 import '../../constants/widget_constant/space.dart';
 import '../../constants/widget_constant/text_widget.dart';
-import 'donatePage_mobile.dart';
 
-class DonatePage extends StatefulWidget {
-  DonatePage({Key? key}) : super(key: key);
+class DonatePageMobile extends StatefulWidget {
+  DonatePageMobile({super.key});
 
   @override
-  State<DonatePage> createState() => _DonatePageState();
+  State<DonatePageMobile> createState() => _DonatePageMobileState();
 }
 
-class _DonatePageState extends State<DonatePage> {
+class _DonatePageMobileState extends State<DonatePageMobile> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  int? _clickindex = 99999;
   List amount = [
     {"amount": "5000"},
     {"amount": "10000"},
@@ -46,11 +45,8 @@ class _DonatePageState extends State<DonatePage> {
     {"amount": "50000"},
     {"amount": "100000"},
   ];
-
-  bool _isHover = false;
-  int? _clickindex = 99999;
-  int? _hoverindex = 99999;
   bool _checkBox = false;
+  int status = 0;
 
   int donationAmount = 0;
 
@@ -75,201 +71,128 @@ class _DonatePageState extends State<DonatePage> {
     getToken();
   }
 
+  String? token;
+  void getToken() async {
+    token = await Store.getToken();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    final screenW = MediaQuery.of(context).size.width;
-
-    return screenW >= 1000
-        ? Scaffold(
-            body: Stack(
+    return Scaffold(
+        key: _scaffoldKey,
+        drawer: MyDrawer(),
+        body: Stack(
+          children: [
+            Stack(
               children: [
-                Stack(
-                  children: [
-                    Image.asset(
-                      "assets/images/donatebackground.png",
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                    Positioned(
-                        child: Image.asset(
-                      "assets/images/transparent.png",
-                      width: double.infinity,
-                      height: double.infinity,
-                      fit: BoxFit.fill,
-                    ))
-                  ],
+                // Image.asset(
+                //   "assets/images/donatebackground.png",
+                //   width: double.infinity,
+                //   height: double.infinity,
+                //   fit: BoxFit.cover,
+                // ),
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: c_black,
                 ),
                 Positioned(
-                    child: Container(
-                  padding: EdgeInsets.only(top: 40, right: 50, left: 50),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextWidget(
-                                text: "Mateng",
-                                t_color: c_white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20),
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    BlocProvider.of<StatusCubit>(context)
-                                        .setDonate();
-                                    BlocProvider.of<DashboardCubit>(context)
-                                        .getDashboard();
-                                  },
-                                  child: TextWidget(
-                                      text: "Home",
-                                      t_color: c_white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15),
-                                ),
-                                Space(
-                                  width: 10,
-                                ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: TextWidget(
-                                      text: "About",
-                                      t_color: c_white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15),
-                                ),
-                                Space(
-                                  width: 10,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    BlocProvider.of<StatusCubit>(context)
-                                        .setDonate();
-                                  },
-                                  child: TextWidget(
-                                      text: "Donate",
-                                      t_color: c_white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15),
-                                ),
-                                Space(
-                                  width: 10,
-                                ),
-                                BlocBuilder<LoginstatusCubit, LoginstatusState>(
-                                  builder: (context, state) {
-                                    return InkWell(
-                                      onTap: () {
-                                        if(state.loginStatus){
-                                          BlocProvider.of<StatusCubit>(context)
-                                              .setBenificiaries();
-                                          BlocProvider.of<HistoryCubit>(context).refreshHistory();
-                                        }else{
-                                          BlocProvider.of<StatusCubit>(context)
-                                              .setLogin();
-                                        }
-                                      },
-                                      child: TextWidget(
-                                          text: "History",
-                                          t_color: c_white,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15),
-                                    );
-                                  },
-                                ),
-                                Space(
-                                  width: 10,
-                                ),
-                                BlocBuilder<LoginstatusCubit, LoginstatusState>(
-                                  builder: (context, state) {
-                                    return InkWell(
-                                      onTap: () {
-                                        if (state.loginStatus) {
-                                          showAlertDialogLogout(context);
-                                        } else {
-                                          BlocProvider.of<StatusCubit>(context)
-                                              .setLogin();
-                                        }
-                                      },
-                                      child: TextWidget(
-                                          text: state.loginStatus
-                                              ? "Logout"
-                                              : "Login",
-                                          t_color: c_white,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15),
-                                    );
-                                  },
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              flex: 7,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextWidget(
-                                      text: "- Donation",
-                                      t_color: c_white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 22),
-                                  Space(
-                                    height: 20,
-                                  ),
-                                  TextWidget(
-                                      text:
-                                          "Don't Let Poverty Destroy\nSomeone's Dreams",
-                                      t_color: c_white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 33),
-                                ],
-                              )),
-                          Expanded(
-                              flex: 3,
-                              child: Container(
-                                  padding: EdgeInsets.all(40),
-                                  width: double.infinity,
-                                  height:
-                                      MediaQuery.of(context).size.width / 2.5,
-                                  color: Colors.white.withOpacity(1),
-                                  child: BlocBuilder<StatusCubit, StatusState>(
-                                    builder: (context, state) {
-                                      return Column(
-                                        children: [
-                                          if (state.status == 0)
-                                            SelectDonationAmount(context),
-                                          if (state.status == 1)
-                                            createAccount(context),
-                                          if (state.status == 2) login(context),
-                                          if (state.status == 3)
-                                            history(context),
-                                        ],
-                                      );
-                                    },
-                                  )))
-                        ],
-                      )
-                    ],
+                  child: Image.asset(
+                    "assets/images/transparent.png",
+                    width: double.infinity,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
                   ),
-                ))
+                )
               ],
             ),
-          )
-        : DonatePageMobile();
+            Positioned(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Space(
+                    height: 25,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextWidget(
+                            text: "MATENG",
+                            t_color: c_white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20),
+                        InkWell(
+                          onTap: () {
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                          child: i_menu,
+                        )
+                      ],
+                    ),
+                  ),
+                  Space(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextWidget(
+                            text: "-- Donation",
+                            t_color: c_white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16),
+                        Space(
+                          height: 10,
+                        ),
+                        TextWidget(
+                            text: "Don't Let Poverty Destroy\nSomeone's Dreams",
+                            t_color: c_white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20),
+                      ],
+                    ),
+                  ),
+                  Space(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.width / 0.8,
+                      color: Colors.white.withOpacity(1),
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: BlocBuilder<StatusCubit, StatusState>(
+                            builder: (context, state) {
+                              return Column(
+                                children: [
+                                  if (state.status == 0)
+                                    SelectDonationAmount(context),
+                                  if (state.status == 1) createAccount(context),
+                                  if (state.status == 2) login(context),
+                                  if (state.status == 3)
+                                    History(context),
+                                ],
+                              );
+                            },
+                          )),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ));
   }
 
-  Expanded history(BuildContext context) {
+  Expanded History(BuildContext context) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,41 +220,35 @@ class _DonatePageState extends State<DonatePage> {
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Container(
                             width: double.infinity,
-                            //  height: MediaQuery.of(context).size.width / 25,
-                            // decoration: BoxDecoration(
-                            //     color: c_black.withOpacity(0.5),
-                            //     border: Border.all(color: c_black)),
+                           // height: MediaQuery.of(context).size.width / 10,
+                            color: c_white,
                             child: Center(
-                                child: InkWell(
-                              onTap: () {},
-                              child: Card(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
+                              padding: const EdgeInsets.all(8.0),
+                              child: InkWell(
+                                onTap: (){
+
+                                },
+                                child: Card(
                                   child: Container(
                                     width: double.infinity,
-                                    padding: EdgeInsets.all(10),
+                                    padding: EdgeInsets.all(8),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        TextWidget(
-                                            text:
-                                                "Donated on : ${state.response[index]["created_at"]}",
-                                            t_color: c_black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize:
-                                                getProportionateScreenWidth(3)),
-                                        Space(
-                                          height: 10,
+                                        Text(
+                                          "Donated on : ${state.response[index]["created_at"]}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: c_black,
+                                              fontSize: getProportionateScreenWidth(14),
+                                              fontWeight: FontWeight.w700),
                                         ),
                                         TextWidget(
-                                            text:
-                                                "Amount : ${indianRupeesFormat.format(double.parse(state.response[index]["amount"]))}",
-                                            t_color: c_black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize:
-                                                getProportionateScreenWidth(3))
+                                          text: "Amount : ${indianRupeesFormat.format(double.parse(state.response[index]["amount"]))}",
+                                          t_color: c_black,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: getProportionateScreenWidth(14),)
                                       ],
                                     ),
                                   ),
@@ -349,9 +266,9 @@ class _DonatePageState extends State<DonatePage> {
               },
             ),
           ),
-          Space(
-            height: 20,
-          ),
+          // Space(
+          //   height: 20,
+          // ),
           // Row(
           //   children: [
           //     Checkbox(
@@ -371,37 +288,61 @@ class _DonatePageState extends State<DonatePage> {
             height: 20,
           ),
           MouseRegion(
-            onHover: (event) {
-              setState(() {
-                _isHover = true;
-              });
-            },
-            onExit: (event) {
-              setState(() {
-                _isHover = false;
-              });
-            },
             child: InkWell(
                 onTap: () async {
                   // bool res = await showDialog(
                   //     barrierDismissible: false,
                   //     context: context,
                   //     builder: (BuildContext context) {
-                  //       return CustomDialog(context, "Sucess",
-                  //           "You have sucessfully\n\nDonated ₹ 1,00,000/- ");
+                  //       return AlertDialog(
+                  //         backgroundColor: c_white.withOpacity(0.9),
+                  //         elevation: 0,
+                  //         content: Column(
+                  //           mainAxisSize: MainAxisSize.min,
+                  //           crossAxisAlignment: CrossAxisAlignment.start,
+                  //           children: [
+                  //             TextWidget(
+                  //                 text: "Sucess",
+                  //                 t_color: c_black,
+                  //                 fontWeight: FontWeight.w400,
+                  //                 fontSize: 25),
+                  //             Space(height: 23.0),
+                  //             TextWidget(
+                  //                 text:
+                  //                     "You have sucessfully\n\nDonated ₹ 1,00,000/- ",
+                  //                 t_color: c_black,
+                  //                 fontWeight: FontWeight.w400,
+                  //                 fontSize: 18),
+                  //             Space(height: 21.0),
+                  //           ],
+                  //         ),
+                  //         actions: [
+                  //           InkWell(
+                  //               onTap: () {
+                  //                 Navigator.pop(context, true);
+                  //                 // Navigator.push(context,
+                  //                 //     MaterialPageRoute(builder: (context) => DonatePage()));
+                  //               },
+                  //               child: CustomButton(
+                  //                   backColor: c_black,
+                  //                   text: "Okay",
+                  //                   c_color: c_white,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   fontSize: 17)),
+                  //         ],
+                  //       );
                   //     });
                   // if (res) {
                   //   BlocProvider.of<StatusCubit>(context).setDonate();
                   // }
                   BlocProvider.of<StatusCubit>(context).setDonate();
-                  BlocProvider.of<DashboardCubit>(context).refreshDashboard();
                 },
                 child: CustomButton(
                     backColor: c_black,
                     text: "Home",
                     c_color: c_white,
                     fontWeight: FontWeight.w400,
-                    fontSize: _isHover == true ? 19 : 17)),
+                    fontSize: 17)),
           ),
           Space(
             height: 20,
@@ -440,7 +381,7 @@ class _DonatePageState extends State<DonatePage> {
           children: [
             TextFormField(
               controller: loginEmail,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -475,16 +416,6 @@ class _DonatePageState extends State<DonatePage> {
         ),
         Space(height: 20),
         MouseRegion(
-          onHover: (event) {
-            setState(() {
-              _isHover = true;
-            });
-          },
-          onExit: (event) {
-            setState(() {
-              _isHover = false;
-            });
-          },
           child: InkWell(
               onTap: () {
                 // showDialog(
@@ -519,7 +450,7 @@ class _DonatePageState extends State<DonatePage> {
                   text: "Login",
                   c_color: c_white,
                   fontWeight: FontWeight.w400,
-                  fontSize: _isHover == true ? 19 : 17)),
+                  fontSize: 17)),
         ),
       ],
     );
@@ -539,7 +470,7 @@ class _DonatePageState extends State<DonatePage> {
                     BlocProvider.of<StatusCubit>(context).setDonate();
                   },
                   child: TextWidget(
-                      text: "<-",
+                      text: "<- ",
                       t_color: c_black,
                       fontWeight: FontWeight.w400,
                       fontSize: 20),
@@ -657,16 +588,6 @@ class _DonatePageState extends State<DonatePage> {
         Column(
           children: [
             MouseRegion(
-              onHover: (event) {
-                setState(() {
-                  _isHover = true;
-                });
-              },
-              onExit: (event) {
-                setState(() {
-                  _isHover = false;
-                });
-              },
               child: InkWell(
                   onTap: () {
                     EasyLoading.show(
@@ -713,7 +634,7 @@ class _DonatePageState extends State<DonatePage> {
                       text: "Next",
                       c_color: c_white,
                       fontWeight: FontWeight.w400,
-                      fontSize: _isHover == true ? 19 : 17)),
+                      fontSize: 17)),
             ),
             Space(
               height: 10,
@@ -732,7 +653,7 @@ class _DonatePageState extends State<DonatePage> {
             text: "Select Your Donation Amount",
             t_color: c_black,
             fontWeight: FontWeight.w400,
-            fontSize: getProportionateScreenWidth(4)),
+            fontSize: 20),
         Space(height: 30),
         GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -751,15 +672,7 @@ class _DonatePageState extends State<DonatePage> {
               //   });
               //
               // },
-              onExit: (event) {
-                _hoverindex = 9999;
-                setState(() {});
-              },
-              onEnter: (event) {
-                _hoverindex = index;
-                setState(() {});
-                print(_hoverindex);
-              },
+
               child: InkWell(
                 onTap: () {
                   _clickindex = index;
@@ -771,23 +684,22 @@ class _DonatePageState extends State<DonatePage> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: _clickindex == index ? c_black : c_white,
-                    border: Border.all(
-                      color: _hoverindex == index ? c_grey : c_black,
-                    ),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
                           color: Colors.black54,
                           //blurRadius: 1.0,
                           offset: Offset(4, 4))
                     ],
+                    border: Border.all(
+                      color: c_black,
+                    ),
                   ),
                   child: Center(
                       child: TextWidget(
                           text: "₹ ${amount[index]["amount"]}/-",
                           t_color: _clickindex == index ? c_white : c_black,
                           fontWeight: FontWeight.w700,
-                          fontSize: getProportionateScreenWidth(
-                              _hoverindex == index ? 4 : 3))),
+                          fontSize: getProportionateScreenWidth(15))),
                 ),
               ),
             );
@@ -821,7 +733,7 @@ class _DonatePageState extends State<DonatePage> {
                         height: 1,
                         color: c_black,
                         fontWeight: FontWeight.w400,
-                        fontSize: getProportionateScreenWidth(4))
+                        fontSize: 18)
                     .copyWith(),
                 border: OutlineInputBorder()),
           ),
@@ -830,16 +742,6 @@ class _DonatePageState extends State<DonatePage> {
           height: 20,
         ),
         MouseRegion(
-          onHover: (event) {
-            setState(() {
-              _isHover = true;
-            });
-          },
-          onExit: (event) {
-            setState(() {
-              _isHover = false;
-            });
-          },
           child: InkWell(onTap: () async {
             if (donationAmount == 0) {
               EasyLoading.showToast("Select Donation Amount.");
@@ -854,7 +756,7 @@ class _DonatePageState extends State<DonatePage> {
                 BlocProvider.of<PayNowCubit>(context)
                     .PayNow(donationAmount.toString())
                     .then((value) {
-                  //  EasyLoading.showToast(value.toString());
+                  // EasyLoading.showToast(value.toString());
 
                   Razorpay razorpay = Razorpay();
 
@@ -892,17 +794,12 @@ class _DonatePageState extends State<DonatePage> {
                   text: state.loginStatus ? "PAY" : "NEXT",
                   c_color: c_white,
                   fontWeight: FontWeight.w400,
-                  fontSize: _isHover == true ? 19 : 17);
+                  fontSize: 17);
             },
           )),
         )
       ],
     );
-  }
-
-  String? token;
-  void getToken() async {
-    token = await Store.getToken();
   }
 
   void handlePaymentErrorResponse(PaymentFailureResponse response) {
@@ -957,18 +854,22 @@ class _DonatePageState extends State<DonatePage> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: const Text('Beneficiaries List'),
+                  title: TextWidget(
+                      text: "Benificiaries List",
+                      t_color: c_black,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         width: 600,
-                        height: 500,
+                        height: 400,
                         child: Column(
                           children: [
                             Container(
                               width: 600,
-                              height: 400,
+                              height: 250,
                               child: ListView.builder(
                                   itemCount: resJson["payment_details"].length,
                                   itemBuilder:
@@ -977,21 +878,25 @@ class _DonatePageState extends State<DonatePage> {
                                       child: ListTile(
                                         title: Text(
                                           "${resJson["payment_details"][index]["name"]}",
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               color: c_black,
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 20),
+                                              fontSize: 10),
                                         ),
                                         trailing: Text(
                                           "${resJson["payment_details"][index]["amount"]}",
                                           style: TextStyle(
                                               color: c_black,
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 20),
+                                              fontSize: 10),
                                         ),
                                       ),
                                     );
                                   }),
+                            ),
+                            Space(
+                              height: 10,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -1113,18 +1018,12 @@ class _DonatePageState extends State<DonatePage> {
     // set up the buttons
     Widget cancelButton = ElevatedButton(
       child: const Text("CANCEL"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
+      onPressed: () {},
     );
 
     Widget continueButton = ElevatedButton(
       child: const Text("OK"),
-      onPressed: () async {
-        await Store.clear(context);
-        BlocProvider.of<LoginstatusCubit>(context).setLogout();
-        Navigator.pop(context);
-      },
+      onPressed: () {},
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(

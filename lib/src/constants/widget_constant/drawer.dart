@@ -1,7 +1,16 @@
+import 'dart:js_interop';
+
+import 'package:donationapp/src/bloc/HistoryBloc/history_cubit.dart';
+import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
+import 'package:donationapp/src/bloc/StatusBloc/status_cubit.dart';
 import 'package:donationapp/src/constants/widget_constant/space.dart';
 import 'package:donationapp/src/constants/widget_constant/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import '../../Storage/storage.dart';
+import '../../bloc/DashboardBloc/dashboard_cubit.dart';
 import '../common_constant/color_constant.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -20,6 +29,7 @@ class MyDrawer extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 child: Drawer(
+                  backgroundColor: c_white.withOpacity(0.9),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -39,7 +49,7 @@ class MyDrawer extends StatelessWidget {
                                     ),
                                     Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         TextWidget(
                                             text: "Donation App",
@@ -59,12 +69,16 @@ class MyDrawer extends StatelessWidget {
                                     fontSize: 18),
                                 onTap: () {
                                   Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  BlocProvider.of<StatusCubit>(context)
+                                      .setDonate();
+                                  BlocProvider.of<DashboardCubit>(context).refreshDashboard();
                                 },
                                 hoverColor: Colors.grey[200], // Set hover color
                               ),
                               ListTile(
                                 title: TextWidget(
-                                    text: "Donations",
+                                    text: "About",
                                     t_color: c_black_opa,
                                     fontWeight: FontWeight.w400,
                                     fontSize: 18),
@@ -75,16 +89,72 @@ class MyDrawer extends StatelessWidget {
                               ),
                               ListTile(
                                 title: TextWidget(
-                                    text: "Login / Sign in",
+                                    text: "Donate",
                                     t_color: c_black_opa,
                                     fontWeight: FontWeight.w400,
                                     fontSize: 18),
                                 onTap: () {
+                                  BlocProvider.of<StatusCubit>(context)
+                                      .setDonate();
                                   Navigator.pop(context);
                                 },
                                 hoverColor: Colors.grey[200], // Set hover color
                               ),
+                              BlocBuilder<LoginstatusCubit, LoginstatusState>(
+                                builder: (context, state) {
+                                  return ListTile(
+                                    title: TextWidget(
+                                        text: "History",
+                                        t_color: c_black_opa,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18),
+                                    onTap: () {
+                                      if(state.loginStatus){
+                                        Navigator.pop(context);
+                                        BlocProvider.of<StatusCubit>(context)
+                                            .setBenificiaries();
+                                        BlocProvider.of<HistoryCubit>(context).refreshHistory();
 
+                                      }else{
+                                        BlocProvider.of<StatusCubit>(context)
+                                            .setLogin();
+                                        Navigator.pop(context);
+                                      }
+
+                                    },
+                                    hoverColor: Colors
+                                        .grey[200], // Set hover color
+                                  );
+                                },
+                              ),
+                              BlocBuilder<LoginstatusCubit, LoginstatusState>(
+                                builder: (context, state) {
+                                  return ListTile(
+                                    title: TextWidget(
+                                        text: state.loginStatus
+                                            ? "Logout"
+                                            : "Login",
+                                        t_color: c_black_opa,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18),
+                                    onTap: () async {
+                                      if (state.loginStatus) {
+                                        Navigator.pop(context);
+                                        await Store.clear(context);
+                                        BlocProvider.of<LoginstatusCubit>(
+                                            context).setLogout();
+                                        // showAlertDialogLogout(context);
+                                      } else {
+                                        BlocProvider.of<StatusCubit>(context)
+                                            .setLogin();
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    hoverColor: Colors
+                                        .grey[200], // Set hover color
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -92,5 +162,42 @@ class MyDrawer extends StatelessWidget {
                 ),
               ),
             )));
+  }
+
+  void showAlertDialogLogout(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = ElevatedButton(
+      child: const Text("CANCEL"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    Widget continueButton = ElevatedButton(
+      child: const Text("OK"),
+      onPressed: () async {
+        await Store.clear(context);
+        BlocProvider.of<LoginstatusCubit>(context).setLogout();
+        Navigator.pop(context);
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: TextWidget(
+          text: "Do you want to logout?",
+          t_color: c_black,
+          fontWeight: FontWeight.w700,
+          fontSize: 15),
+      // content: TextWidget(text: message, t_color: c_black, fontWeight: FontWeight.w700, fontSize: 15),
+      actions: [cancelButton, continueButton],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

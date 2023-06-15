@@ -15,16 +15,20 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Container(
       height: 48,
-      width: 329,
+      width: double.infinity,
+      // decoration: BoxDecoration(
+      //     border: Border.all(color: c_black) ,
+      //     boxShadow: <BoxShadow>[
+      //       BoxShadow(
+      //           color: Colors.black54,
+      //           //blurRadius: 1.0,
+      //           offset: Offset(4, 4)
+      //       )
+      //     ],
+      //     color: backColor
+      // ),
       decoration: BoxDecoration(
           border: Border.all(color: c_black) ,
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.black54,
-                //blurRadius: 1.0,
-                offset: Offset(4, 4)
-            )
-          ],
           color: backColor
       ),
       child: Center(child: TextWidget(text: text, t_color: c_color, fontWeight: fontWeight, fontSize: fontSize)),
