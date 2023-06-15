@@ -15,6 +15,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     if(res != false){
       emit(DashboardLoaded(response: res));
     }else{
+      emit(DashboardError(response: null));
       EasyLoading.showToast("Error on getting data");
     }
   }

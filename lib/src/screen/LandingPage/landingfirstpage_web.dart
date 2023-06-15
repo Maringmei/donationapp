@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import '../../../SizedConfig.dart';
 import '../../Storage/storage.dart';
 import '../../bloc/LoginStatus/loginstatus_cubit.dart';
+import '../../constants/widget_constant/custom_button.dart';
 import '../../constants/widget_constant/space.dart';
 import '../DonatePage/donatepage.dart';
 
@@ -121,6 +122,167 @@ class LandingFirstPageWeb extends StatelessWidget {
                               height: getProportionateScreenWidth(13),
                               child: ElevatedButton(
                                   onPressed: () async {
+                                    // showDialog<void>(
+                                    //   barrierDismissible: false,
+                                    //   context: context,
+                                    //   builder: (BuildContext context) {
+                                    //     return AlertDialog(
+                                    //       title: TextWidget(
+                                    //           text: "Beneficiaries List",
+                                    //           t_color: c_black,
+                                    //           fontWeight: FontWeight.w400,
+                                    //           fontSize: 15),
+                                    //       content: SingleChildScrollView(
+                                    //         child: Column(
+                                    //           mainAxisSize: MainAxisSize.min,
+                                    //           children: [
+                                    //             Container(
+                                    //               width: 600,
+                                    //               child: Column(
+                                    //                 children: [
+                                    //                   Container(
+                                    //                     width: 600,
+                                    //                     height:
+                                    //                         getProportionateScreenWidth(
+                                    //                             100),
+                                    //                     child: ListView.builder(
+                                    //                         itemCount: 10,
+                                    //                         itemBuilder:
+                                    //                             (BuildContext
+                                    //                                     context,
+                                    //                                 int index) {
+                                    //                           return Card(
+                                    //                             child: ListTile(
+                                    //                               title: Text(
+                                    //                                 "Maringmei Shengang Kabui Maringmei Shengang",
+                                    //                                 style: TextStyle(
+                                    //                                     color:
+                                    //                                         c_black,
+                                    //                                     fontWeight:
+                                    //                                         FontWeight
+                                    //                                             .w700,
+                                    //                                     fontSize:
+                                    //                                         15),
+                                    //                               ),
+                                    //                               trailing:
+                                    //                                   Text(
+                                    //                                 "50000",
+                                    //                                 style: TextStyle(
+                                    //                                     color:
+                                    //                                         c_black,
+                                    //                                     fontWeight:
+                                    //                                         FontWeight
+                                    //                                             .w700,
+                                    //                                     fontSize:
+                                    //                                         15),
+                                    //                               ),
+                                    //                             ),
+                                    //                           );
+                                    //                         }),
+                                    //                   ),
+                                    //                   Space(
+                                    //                     height: 10,
+                                    //                   ),
+                                    //                   Row(
+                                    //                     mainAxisAlignment:
+                                    //                         MainAxisAlignment
+                                    //                             .end,
+                                    //                     crossAxisAlignment:
+                                    //                         CrossAxisAlignment
+                                    //                             .center,
+                                    //                     children: [
+                                    //                       Column(
+                                    //                         crossAxisAlignment:
+                                    //                             CrossAxisAlignment
+                                    //                                 .end,
+                                    //                         children: [
+                                    //                           TextWidget(
+                                    //                               text:
+                                    //                                   "Net Amount : ",
+                                    //                               t_color:
+                                    //                                   c_black,
+                                    //                               fontWeight:
+                                    //                                   FontWeight
+                                    //                                       .w600,
+                                    //                               fontSize: 13),
+                                    //                           TextWidget(
+                                    //                               text:
+                                    //                                   "Tax : ",
+                                    //                               t_color:
+                                    //                                   c_black,
+                                    //                               fontWeight:
+                                    //                                   FontWeight
+                                    //                                       .w600,
+                                    //                               fontSize: 13),
+                                    //                           TextWidget(
+                                    //                               text:
+                                    //                                   "Grand Amount : ",
+                                    //                               t_color:
+                                    //                                   c_black,
+                                    //                               fontWeight:
+                                    //                                   FontWeight
+                                    //                                       .w600,
+                                    //                               fontSize: 13),
+                                    //                         ],
+                                    //                       ),
+                                    //                       Column(
+                                    //                         crossAxisAlignment:
+                                    //                             CrossAxisAlignment
+                                    //                                 .end,
+                                    //                         children: [
+                                    //                           TextWidget(
+                                    //                               text:
+                                    //                                   "100000",
+                                    //                               t_color:
+                                    //                                   c_black,
+                                    //                               fontWeight:
+                                    //                                   FontWeight
+                                    //                                       .w600,
+                                    //                               fontSize: 13),
+                                    //                           TextWidget(
+                                    //                               text: "50000",
+                                    //                               t_color:
+                                    //                                   c_black,
+                                    //                               fontWeight:
+                                    //                                   FontWeight
+                                    //                                       .w600,
+                                    //                               fontSize: 13),
+                                    //                           TextWidget(
+                                    //                               text:
+                                    //                                   "1500000",
+                                    //                               t_color:
+                                    //                                   c_black,
+                                    //                               fontWeight:
+                                    //                                   FontWeight
+                                    //                                       .w600,
+                                    //                               fontSize: 13),
+                                    //                         ],
+                                    //                       )
+                                    //                     ],
+                                    //                   )
+                                    //                 ],
+                                    //               ),
+                                    //             ),
+                                    //           ],
+                                    //         ),
+                                    //       ),
+                                    //       actions: <Widget>[
+                                    //         InkWell(
+                                    //           onTap: () {
+                                    //             Navigator.pop(context);
+                                    //           },
+                                    //           child: CustomButton(
+                                    //               backColor: c_black,
+                                    //               text: "Okay",
+                                    //               c_color: c_white,
+                                    //               fontWeight: FontWeight.w400,
+                                    //               fontSize: 17),
+                                    //         ),
+                                    //       ],
+                                    //     );
+                                    //   },
+                                    // );
+
                                     Route route = MaterialPageRoute(
                                         builder: (context) => DonatePage());
                                     Navigator.push(context, route);
@@ -134,8 +296,8 @@ class LandingFirstPageWeb extends StatelessWidget {
                                           .setLogin();
                                     }
 
-                                   //
-                                    
+                                    //
+
                                     // showDialog<void>(
                                     //   context: context,
                                     //   builder: (BuildContext context) {

@@ -16,3 +16,8 @@ class DashboardLoaded extends DashboardState {
   DashboardLoaded({required super.response});
 }
 
+class DashboardError extends DashboardState {
+  DashboardError({required super.response});
+}
+
+
