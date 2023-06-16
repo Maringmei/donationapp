@@ -14,7 +14,7 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial(message: "Init"));
 
   Future<bool> login(email, password,context) async {
-    EasyLoading.show(status: "Logging in...");
+    EasyLoading.show(status: "Logging in...",dismissOnTap: false);
     LoginAPI api = LoginAPI();
     final res = await api.LoginUser(email,password,context).then((value) {
       EasyLoading.dismiss();

@@ -305,8 +305,8 @@ class _DonatePageState extends State<DonatePage> {
                                 child: InkWell(
                               onTap: () {
                                 BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((resJson){
-                                  EasyLoading.showToast(resJson);
                                  if(resJson != false){
+                                  // EasyLoading.showToast(resJson.toString());
                                    showDialog<void>(
                                      barrierDismissible: false,
                                      context: context,
@@ -329,7 +329,7 @@ class _DonatePageState extends State<DonatePage> {
                                                        width: 600,
                                                        height:
                                                        getProportionateScreenWidth(
-                                                           200),
+                                                           100),
                                                        child: ListView.builder(
                                                            itemCount: resJson["payment_details"].length,
                                                            itemBuilder:
@@ -340,7 +340,6 @@ class _DonatePageState extends State<DonatePage> {
                                                                child: ListTile(
                                                                  title: Text(
                                                                    "${resJson["payment_details"][index]["name"]}",
-                                                                   overflow: TextOverflow.ellipsis,
                                                                    style: TextStyle(
                                                                        color:
                                                                        c_black,
@@ -417,7 +416,8 @@ class _DonatePageState extends State<DonatePage> {
                                                                .end,
                                                            children: [
                                                              TextWidget(
-                                                                 text: "${resJson["net_amount"]}",
+                                                                 text:
+                                                                 "${resJson["net_amount"]}",
                                                                  t_color:
                                                                  c_black,
                                                                  fontWeight:
@@ -433,7 +433,8 @@ class _DonatePageState extends State<DonatePage> {
                                                                      .w600,
                                                                  fontSize: 13),
                                                              TextWidget(
-                                                                 text: "${resJson["grand_amount"]}",
+                                                                 text:
+                                                                 "${resJson["grand_amount"]}",
                                                                  t_color:
                                                                  c_black,
                                                                  fontWeight:

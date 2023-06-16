@@ -227,7 +227,172 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                               padding: const EdgeInsets.all(8.0),
                               child: InkWell(
                                 onTap: (){
+                        BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((value){
+                          if(value != false){
+                            showDialog<void>(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: TextWidget(
+                                      text: "Beneficiaries List",
+                                      t_color: c_black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 600,
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                width: 600,
+                                                height:
+                                                    getProportionateScreenWidth(
+                                                        200),
+                                                child: ListView.builder(
+                                                    itemCount: value["payment_details"].length,
+                                                    itemBuilder:
+                                                        (BuildContext
+                                                                context,
+                                                            int index) {
+                                                      return Card(
+                                                        child: ListTile(
+                                                          title: Text(
+                                                            value["payment_details"][index]["name"],
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: TextStyle(
+                                                                color:
+                                                                    c_black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize:
+                                                                    15),
+                                                          ),
+                                                          trailing:
+                                                              Text(
+                                                                value["payment_details"][index]["amount"],
+                                                            style: TextStyle(
+                                                                color:
+                                                                    c_black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700,
+                                                                fontSize:
+                                                                    15),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }),
+                                              ),
+                                              Space(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .end,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .center,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .end,
+                                                    children: [
+                                                      TextWidget(
+                                                          text:
+                                                              "Net Amount : ",
+                                                          t_color:
+                                                              c_black,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize: 13),
+                                                      TextWidget(
+                                                          text:
+                                                              "Tax : ",
+                                                          t_color:
+                                                              c_black,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize: 13),
+                                                      TextWidget(
+                                                          text:
+                                                              "Grand Amount : ",
+                                                          t_color:
+                                                              c_black,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize: 13),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .end,
+                                                    children: [
+                                                      TextWidget(
+                                                          text:
+                                                              "${ value["net_amount"]}",
+                                                          t_color:
+                                                              c_black,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize: 13),
+                                                      TextWidget(
+                                                          text: "${ value["tax"]}",
+                                                          t_color:
+                                                              c_black,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize: 13),
+                                                      TextWidget(
+                                                          text:
+                                                          "${ value["grand_amount"]}",
+                                                          t_color:
+                                                              c_black,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w600,
+                                                          fontSize: 13),
+                                                    ],
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: CustomButton(
+                                          backColor: c_black,
+                                          text: "Okay",
+                                          c_color: c_white,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 17),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
 
+                          }
+                        });
                                 },
                                 child: Card(
                                   child: Container(

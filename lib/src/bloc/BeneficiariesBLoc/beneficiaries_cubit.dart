@@ -10,7 +10,7 @@ class BeneficiariesCubit extends Cubit<BeneficiariesState> {
   BeneficiariesCubit() : super(BeneficiariesInitial(response: null));
 
   Future<dynamic> getBeneficiariesList(paymentID)async{
-    EasyLoading.show(status: "Please Wait...");
+    EasyLoading.show(status: "Please Wait...",dismissOnTap: false);
     BenificiariesListAPI api = BenificiariesListAPI();
     dynamic res = await api.BenificiariesList(paymentID);
     if(res != false){
