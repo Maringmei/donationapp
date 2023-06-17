@@ -112,7 +112,7 @@ class LandingFirstPageWeb extends StatelessWidget {
                                         height: 1,
                                         color: c_white,
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 48)
+                                        fontSize: getProportionateScreenWidth(15))
                                     .copyWith()),
                             Space(
                               height: 50,

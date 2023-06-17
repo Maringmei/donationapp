@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:razorpay_web/razorpay_web.dart';
 
@@ -213,216 +214,237 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                   return Container();
                 }
                 if (state is HistoryLoaded) {
-                  return ListView.builder(
-                      itemCount: state.response.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Container(
-                            width: double.infinity,
-                           // height: MediaQuery.of(context).size.width / 10,
-                            color: c_white,
-                            child: Center(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: InkWell(
-                                onTap: (){
-                        BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((value){
-                          if(value != false){
-                            showDialog<void>(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: TextWidget(
-                                      text: "Beneficiaries List",
-                                      t_color: c_black,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 15),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 600,
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                width: 600,
-                                                height:
-                                                    getProportionateScreenWidth(
-                                                        200),
-                                                child: ListView.builder(
-                                                    itemCount: value["payment_details"].length,
-                                                    itemBuilder:
-                                                        (BuildContext
-                                                                context,
-                                                            int index) {
-                                                      return Card(
-                                                        child: ListTile(
-                                                          title: Text(
-                                                            value["payment_details"][index]["name"],
-                                                            overflow: TextOverflow.ellipsis,
-                                                            style: TextStyle(
-                                                                color:
-                                                                    c_black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize:
-                                                                    15),
+
+
+
+
+                  return AnimationLimiter(
+                    child: ListView.builder(
+                        itemCount: state.response.length,
+                        physics:
+                        BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Container(
+                              width: double.infinity,
+                             // height: MediaQuery.of(context).size.width / 10,
+                              color: c_white,
+                              child: Center(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: InkWell(
+                                  onTap: (){
+                          BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((value){
+                            if(value != false){
+                              showDialog<void>(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: TextWidget(
+                                        text: "Beneficiaries List",
+                                        t_color: c_black,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 15),
+                                    content: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            width: 600,
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  width: 600,
+                                                  height:
+                                                      getProportionateScreenWidth(
+                                                          200),
+                                                  child: ListView.builder(
+                                                      itemCount: value["payment_details"].length,
+                                                      itemBuilder:
+                                                          (BuildContext
+                                                                  context,
+                                                              int index) {
+                                                        return Card(
+                                                          child: ListTile(
+                                                            title: Text(
+                                                              value["payment_details"][index]["name"],
+                                                              overflow: TextOverflow.ellipsis,
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      c_black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize:
+                                                                      15),
+                                                            ),
+                                                            trailing:
+                                                                Text(
+                                                                  value["payment_details"][index]["amount"],
+                                                              style: TextStyle(
+                                                                  color:
+                                                                      c_black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  fontSize:
+                                                                      15),
+                                                            ),
                                                           ),
-                                                          trailing:
-                                                              Text(
-                                                                value["payment_details"][index]["amount"],
-                                                            style: TextStyle(
-                                                                color:
-                                                                    c_black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize:
-                                                                    15),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }),
-                                              ),
-                                              Space(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .end,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .center,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .end,
-                                                    children: [
-                                                      TextWidget(
-                                                          text:
-                                                              "Net Amount : ",
-                                                          t_color:
-                                                              c_black,
-                                                          fontWeight:
-                                                              FontWeight
-                                                                  .w600,
-                                                          fontSize: 13),
-                                                      TextWidget(
-                                                          text:
-                                                              "Tax : ",
-                                                          t_color:
-                                                              c_black,
-                                                          fontWeight:
-                                                              FontWeight
-                                                                  .w600,
-                                                          fontSize: 13),
-                                                      TextWidget(
-                                                          text:
-                                                              "Grand Amount : ",
-                                                          t_color:
-                                                              c_black,
-                                                          fontWeight:
-                                                              FontWeight
-                                                                  .w600,
-                                                          fontSize: 13),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .end,
-                                                    children: [
-                                                      TextWidget(
-                                                          text:
-                                                              "${ value["net_amount"]}",
-                                                          t_color:
-                                                              c_black,
-                                                          fontWeight:
-                                                              FontWeight
-                                                                  .w600,
-                                                          fontSize: 13),
-                                                      TextWidget(
-                                                          text: "${ value["tax"]}",
-                                                          t_color:
-                                                              c_black,
-                                                          fontWeight:
-                                                              FontWeight
-                                                                  .w600,
-                                                          fontSize: 13),
-                                                      TextWidget(
-                                                          text:
-                                                          "${ value["grand_amount"]}",
-                                                          t_color:
-                                                              c_black,
-                                                          fontWeight:
-                                                              FontWeight
-                                                                  .w600,
-                                                          fontSize: 13),
-                                                    ],
-                                                  )
-                                                ],
-                                              )
-                                            ],
+                                                        );
+                                                      }),
+                                                ),
+                                                Space(
+                                                  height: 10,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .end,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .center,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        TextWidget(
+                                                            text:
+                                                                "Net Amount : ",
+                                                            t_color:
+                                                                c_black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600,
+                                                            fontSize: 13),
+                                                        TextWidget(
+                                                            text:
+                                                                "Tax : ",
+                                                            t_color:
+                                                                c_black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600,
+                                                            fontSize: 13),
+                                                        TextWidget(
+                                                            text:
+                                                                "Grand Amount : ",
+                                                            t_color:
+                                                                c_black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600,
+                                                            fontSize: 13),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        TextWidget(
+                                                            text:
+                                                                "${ value["net_amount"]}",
+                                                            t_color:
+                                                                c_black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600,
+                                                            fontSize: 13),
+                                                        TextWidget(
+                                                            text: "${ value["tax"]}",
+                                                            t_color:
+                                                                c_black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600,
+                                                            fontSize: 13),
+                                                        TextWidget(
+                                                            text:
+                                                            "${ value["grand_amount"]}",
+                                                            t_color:
+                                                                c_black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600,
+                                                            fontSize: 13),
+                                                      ],
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: CustomButton(
+                                            backColor: c_black,
+                                            text: "Okay",
+                                            c_color: c_white,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 17),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                            }
+                          });
+                                  },
+                                  child: AnimationConfiguration.staggeredList(
+                                    position: index,
+                                    delay: Duration(milliseconds: 100),
+                                    child: SlideAnimation(
+                                      duration: Duration(milliseconds: 2500),
+                                      curve: Curves.fastLinearToSlowEaseIn,
+                                      child: FadeInAnimation(
+                                        curve: Curves.fastLinearToSlowEaseIn,
+                                        duration: Duration(milliseconds: 2500),
+                                        child: Card(
+                                          child: Container(
+                                            width: double.infinity,
+                                            padding: EdgeInsets.all(8),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Donated on : ${state.response[index]["created_at"]}",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      color: c_black,
+                                                      fontSize: getProportionateScreenWidth(14),
+                                                      fontWeight: FontWeight.w700),
+                                                ),
+                                                TextWidget(
+                                                  text: "Amount : ${indianRupeesFormat.format(double.parse(state.response[index]["amount"]))}",
+                                                  t_color: c_black,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: getProportionateScreenWidth(14),)
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                  actions: <Widget>[
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: CustomButton(
-                                          backColor: c_black,
-                                          text: "Okay",
-                                          c_color: c_white,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 17),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
 
-                          }
-                        });
-                                },
-                                child: Card(
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(8),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Donated on : ${state.response[index]["created_at"]}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: c_black,
-                                              fontSize: getProportionateScreenWidth(14),
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        TextWidget(
-                                          text: "Amount : ${indianRupeesFormat.format(double.parse(state.response[index]["amount"]))}",
-                                          t_color: c_black,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: getProportionateScreenWidth(14),)
-                                      ],
-                                    ),
-                                  ),
                                 ),
-                              ),
-                            )),
-                          ),
-                        );
-                      });
+                              )),
+                            ),
+                          );
+                        }),
+                  );
                 }
                 if (state is HistoryError) {
                   return Container();

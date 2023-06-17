@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_web/razorpay_web.dart';
@@ -290,226 +291,468 @@ class _DonatePageState extends State<DonatePage> {
                   return Container();
                 }
                 if (state is HistoryLoaded) {
-                  return ListView.builder(
+
+
+                  return AnimationLimiter(
+                    child: ListView.builder(
+                      padding: EdgeInsets.all(MediaQuery.of(context).size.width / 150),
+                      //  padding: EdgeInsets.symmetric(horizontal: 10),
+                      physics:
+                      BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                       itemCount: state.response.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Container(
-                            width: double.infinity,
-                            //  height: MediaQuery.of(context).size.width / 25,
-                            // decoration: BoxDecoration(
-                            //     color: c_black.withOpacity(0.5),
-                            //     border: Border.all(color: c_black)),
-                            child: Center(
-                                child: InkWell(
-                              onTap: () {
-                                BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((resJson){
-                                 if(resJson != false){
-                                  // EasyLoading.showToast(resJson.toString());
-                                   showDialog<void>(
-                                     barrierDismissible: false,
-                                     context: context,
-                                     builder: (BuildContext context) {
-                                       return AlertDialog(
-                                         title: TextWidget(
-                                             text: "Beneficiaries List",
-                                             t_color: c_black,
-                                             fontWeight: FontWeight.w400,
-                                             fontSize: 15),
-                                         content: SingleChildScrollView(
-                                           child: Column(
-                                             mainAxisSize: MainAxisSize.min,
-                                             children: [
-                                               Container(
-                                                 width: 600,
-                                                 child: Column(
-                                                   children: [
-                                                     Container(
-                                                       width: 600,
-                                                       height:
-                                                       getProportionateScreenWidth(
-                                                           100),
-                                                       child: ListView.builder(
-                                                           itemCount: resJson["payment_details"].length,
-                                                           itemBuilder:
-                                                               (BuildContext
-                                                           context,
-                                                               int index) {
-                                                             return Card(
-                                                               child: ListTile(
-                                                                 title: Text(
-                                                                   "${resJson["payment_details"][index]["name"]}",
-                                                                   style: TextStyle(
-                                                                       color:
-                                                                       c_black,
-                                                                       fontWeight:
-                                                                       FontWeight
-                                                                           .w700,
-                                                                       fontSize:
-                                                                       15),
-                                                                 ),
-                                                                 trailing:
-                                                                 Text(
-                                                                   "${resJson["payment_details"][index]["amount"]}",
-                                                                   style: TextStyle(
-                                                                       color:
-                                                                       c_black,
-                                                                       fontWeight:
-                                                                       FontWeight
-                                                                           .w700,
-                                                                       fontSize:
-                                                                       15),
-                                                                 ),
-                                                               ),
-                                                             );
-                                                           }),
-                                                     ),
-                                                     Space(
-                                                       height: 10,
-                                                     ),
-                                                     Row(
-                                                       mainAxisAlignment:
-                                                       MainAxisAlignment
-                                                           .end,
-                                                       crossAxisAlignment:
-                                                       CrossAxisAlignment
-                                                           .center,
-                                                       children: [
-                                                         Column(
-                                                           crossAxisAlignment:
-                                                           CrossAxisAlignment
-                                                               .end,
-                                                           children: [
-                                                             TextWidget(
-                                                                 text:
-                                                                 "Net Amount : ",
-                                                                 t_color:
-                                                                 c_black,
-                                                                 fontWeight:
-                                                                 FontWeight
-                                                                     .w600,
-                                                                 fontSize: 13),
-                                                             TextWidget(
-                                                                 text:
-                                                                 "Tax : ",
-                                                                 t_color:
-                                                                 c_black,
-                                                                 fontWeight:
-                                                                 FontWeight
-                                                                     .w600,
-                                                                 fontSize: 13),
-                                                             TextWidget(
-                                                                 text:
-                                                                 "Grand Amount : ",
-                                                                 t_color:
-                                                                 c_black,
-                                                                 fontWeight:
-                                                                 FontWeight
-                                                                     .w600,
-                                                                 fontSize: 13),
-                                                           ],
-                                                         ),
-                                                         Column(
-                                                           crossAxisAlignment:
-                                                           CrossAxisAlignment
-                                                               .end,
-                                                           children: [
-                                                             TextWidget(
-                                                                 text:
-                                                                 "${resJson["net_amount"]}",
-                                                                 t_color:
-                                                                 c_black,
-                                                                 fontWeight:
-                                                                 FontWeight
-                                                                     .w600,
-                                                                 fontSize: 13),
-                                                             TextWidget(
-                                                                 text: "${resJson["tax"]}",
-                                                                 t_color:
-                                                                 c_black,
-                                                                 fontWeight:
-                                                                 FontWeight
-                                                                     .w600,
-                                                                 fontSize: 13),
-                                                             TextWidget(
-                                                                 text:
-                                                                 "${resJson["grand_amount"]}",
-                                                                 t_color:
-                                                                 c_black,
-                                                                 fontWeight:
-                                                                 FontWeight
-                                                                     .w600,
-                                                                 fontSize: 13),
-                                                           ],
-                                                         )
-                                                       ],
-                                                     )
-                                                   ],
-                                                 ),
-                                               ),
-                                             ],
-                                           ),
-                                         ),
-                                         actions: <Widget>[
-                                           InkWell(
-                                             onTap: () {
-                                               Navigator.pop(context);
-                                             },
-                                             child: CustomButton(
-                                                 backColor: c_black,
-                                                 text: "Okay",
-                                                 c_color: c_white,
-                                                 fontWeight: FontWeight.w400,
-                                                 fontSize: 17),
-                                           ),
-                                         ],
-                                       );
-                                     },
-                                   );
-                                 }
-                                 else(
-                                 EasyLoading.showToast("Something went wrong.")
-                                 );
-                                });
-                              },
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextWidget(
-                                            text:
-                                                "Donated on : ${state.response[index]["created_at"]}",
-                                            t_color: c_black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize:
-                                                getProportionateScreenWidth(3)),
-                                        Space(
-                                          height: 10,
+                        return AnimationConfiguration.staggeredList(
+                          position: index,
+                          delay: Duration(milliseconds: 100),
+                          child: SlideAnimation(
+                            duration: Duration(milliseconds: 2500),
+                            curve: Curves.fastLinearToSlowEaseIn,
+                            child: FadeInAnimation(
+                              curve: Curves.fastLinearToSlowEaseIn,
+                              duration: Duration(milliseconds: 2500),
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  //  height: MediaQuery.of(context).size.width / 25,
+                                  // decoration: BoxDecoration(
+                                  //     color: c_black.withOpacity(0.5),
+                                  //     border: Border.all(color: c_black)),
+                                  child: Center(
+                                      child: InkWell(
+                                        onTap: () {
+                                          BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((resJson){
+                                            if(resJson != false){
+                                              // EasyLoading.showToast(resJson.toString());
+                                              showDialog<void>(
+                                                barrierDismissible: false,
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: TextWidget(
+                                                        text: "Beneficiaries List",
+                                                        t_color: c_black,
+                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: 15),
+                                                    content: SingleChildScrollView(
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          Container(
+                                                            width: 600,
+                                                            child: Column(
+                                                              children: [
+                                                                Container(
+                                                                  width: 600,
+                                                                  height:
+                                                                  getProportionateScreenWidth(
+                                                                      100),
+                                                                  child: ListView.builder(
+                                                                      itemCount: resJson["payment_details"].length,
+                                                                      itemBuilder:
+                                                                          (BuildContext
+                                                                      context,
+                                                                          int index) {
+                                                                        return Card(
+                                                                          child: ListTile(
+                                                                            title: Text(
+                                                                              "${resJson["payment_details"][index]["name"]}",
+                                                                              style: TextStyle(
+                                                                                  color:
+                                                                                  c_black,
+                                                                                  fontWeight:
+                                                                                  FontWeight
+                                                                                      .w700,
+                                                                                  fontSize:
+                                                                                  15),
+                                                                            ),
+                                                                            trailing:
+                                                                            Text(
+                                                                              "${resJson["payment_details"][index]["amount"]}",
+                                                                              style: TextStyle(
+                                                                                  color:
+                                                                                  c_black,
+                                                                                  fontWeight:
+                                                                                  FontWeight
+                                                                                      .w700,
+                                                                                  fontSize:
+                                                                                  15),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      }),
+                                                                ),
+                                                                Space(
+                                                                  height: 10,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                                  children: [
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .end,
+                                                                      children: [
+                                                                        TextWidget(
+                                                                            text:
+                                                                            "Net Amount : ",
+                                                                            t_color:
+                                                                            c_black,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                            fontSize: 13),
+                                                                        TextWidget(
+                                                                            text:
+                                                                            "Tax : ",
+                                                                            t_color:
+                                                                            c_black,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                            fontSize: 13),
+                                                                        TextWidget(
+                                                                            text:
+                                                                            "Grand Amount : ",
+                                                                            t_color:
+                                                                            c_black,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                            fontSize: 13),
+                                                                      ],
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .end,
+                                                                      children: [
+                                                                        TextWidget(
+                                                                            text:
+                                                                            "${resJson["net_amount"]}",
+                                                                            t_color:
+                                                                            c_black,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                            fontSize: 13),
+                                                                        TextWidget(
+                                                                            text: "${resJson["tax"]}",
+                                                                            t_color:
+                                                                            c_black,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                            fontSize: 13),
+                                                                        TextWidget(
+                                                                            text:
+                                                                            "${resJson["grand_amount"]}",
+                                                                            t_color:
+                                                                            c_black,
+                                                                            fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                            fontSize: 13),
+                                                                      ],
+                                                                    )
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                        child: CustomButton(
+                                                            backColor: c_black,
+                                                            text: "Okay",
+                                                            c_color: c_white,
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: 17),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            }
+                                            else(
+                                                EasyLoading.showToast("Something went wrong.")
+                                            );
+                                          });
+                                        },
+                                        child: Card(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5.0),
+                                            child: Container(
+                                              width: double.infinity,
+                                              padding: EdgeInsets.all(10),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  TextWidget(
+                                                      text:
+                                                      "Donated on : ${state.response[index]["created_at"]}",
+                                                      t_color: c_black,
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize:
+                                                      getProportionateScreenWidth(3)),
+                                                  Space(
+                                                    height: 10,
+                                                  ),
+                                                  TextWidget(
+                                                      text:
+                                                      "Amount : ${indianRupeesFormat.format(double.parse(state.response[index]["amount"]))}",
+                                                      t_color: c_black,
+                                                      fontWeight: FontWeight.w700,
+                                                      fontSize:
+                                                      getProportionateScreenWidth(3))
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        TextWidget(
-                                            text:
-                                                "Amount : ${indianRupeesFormat.format(double.parse(state.response[index]["amount"]))}",
-                                            t_color: c_black,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize:
-                                                getProportionateScreenWidth(3))
-                                      ],
-                                    ),
-                                  ),
+                                      )),
                                 ),
-                              ),
-                            )),
+                              )
+                            ),
                           ),
                         );
-                      });
+                      },
+                    ),
+                  );
+
+                  // return ListView.builder(
+                  //     itemCount: state.response.length,
+                  //     itemBuilder: (BuildContext context, int index) {
+                  //       return Padding(
+                  //         padding: const EdgeInsets.only(bottom: 8.0),
+                  //         child: Container(
+                  //           width: double.infinity,
+                  //           //  height: MediaQuery.of(context).size.width / 25,
+                  //           // decoration: BoxDecoration(
+                  //           //     color: c_black.withOpacity(0.5),
+                  //           //     border: Border.all(color: c_black)),
+                  //           child: Center(
+                  //               child: InkWell(
+                  //             onTap: () {
+                  //               BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((resJson){
+                  //                if(resJson != false){
+                  //                 // EasyLoading.showToast(resJson.toString());
+                  //                  showDialog<void>(
+                  //                    barrierDismissible: false,
+                  //                    context: context,
+                  //                    builder: (BuildContext context) {
+                  //                      return AlertDialog(
+                  //                        title: TextWidget(
+                  //                            text: "Beneficiaries List",
+                  //                            t_color: c_black,
+                  //                            fontWeight: FontWeight.w400,
+                  //                            fontSize: 15),
+                  //                        content: SingleChildScrollView(
+                  //                          child: Column(
+                  //                            mainAxisSize: MainAxisSize.min,
+                  //                            children: [
+                  //                              Container(
+                  //                                width: 600,
+                  //                                child: Column(
+                  //                                  children: [
+                  //                                    Container(
+                  //                                      width: 600,
+                  //                                      height:
+                  //                                      getProportionateScreenWidth(
+                  //                                          100),
+                  //                                      child: ListView.builder(
+                  //                                          itemCount: resJson["payment_details"].length,
+                  //                                          itemBuilder:
+                  //                                              (BuildContext
+                  //                                          context,
+                  //                                              int index) {
+                  //                                            return Card(
+                  //                                              child: ListTile(
+                  //                                                title: Text(
+                  //                                                  "${resJson["payment_details"][index]["name"]}",
+                  //                                                  style: TextStyle(
+                  //                                                      color:
+                  //                                                      c_black,
+                  //                                                      fontWeight:
+                  //                                                      FontWeight
+                  //                                                          .w700,
+                  //                                                      fontSize:
+                  //                                                      15),
+                  //                                                ),
+                  //                                                trailing:
+                  //                                                Text(
+                  //                                                  "${resJson["payment_details"][index]["amount"]}",
+                  //                                                  style: TextStyle(
+                  //                                                      color:
+                  //                                                      c_black,
+                  //                                                      fontWeight:
+                  //                                                      FontWeight
+                  //                                                          .w700,
+                  //                                                      fontSize:
+                  //                                                      15),
+                  //                                                ),
+                  //                                              ),
+                  //                                            );
+                  //                                          }),
+                  //                                    ),
+                  //                                    Space(
+                  //                                      height: 10,
+                  //                                    ),
+                  //                                    Row(
+                  //                                      mainAxisAlignment:
+                  //                                      MainAxisAlignment
+                  //                                          .end,
+                  //                                      crossAxisAlignment:
+                  //                                      CrossAxisAlignment
+                  //                                          .center,
+                  //                                      children: [
+                  //                                        Column(
+                  //                                          crossAxisAlignment:
+                  //                                          CrossAxisAlignment
+                  //                                              .end,
+                  //                                          children: [
+                  //                                            TextWidget(
+                  //                                                text:
+                  //                                                "Net Amount : ",
+                  //                                                t_color:
+                  //                                                c_black,
+                  //                                                fontWeight:
+                  //                                                FontWeight
+                  //                                                    .w600,
+                  //                                                fontSize: 13),
+                  //                                            TextWidget(
+                  //                                                text:
+                  //                                                "Tax : ",
+                  //                                                t_color:
+                  //                                                c_black,
+                  //                                                fontWeight:
+                  //                                                FontWeight
+                  //                                                    .w600,
+                  //                                                fontSize: 13),
+                  //                                            TextWidget(
+                  //                                                text:
+                  //                                                "Grand Amount : ",
+                  //                                                t_color:
+                  //                                                c_black,
+                  //                                                fontWeight:
+                  //                                                FontWeight
+                  //                                                    .w600,
+                  //                                                fontSize: 13),
+                  //                                          ],
+                  //                                        ),
+                  //                                        Column(
+                  //                                          crossAxisAlignment:
+                  //                                          CrossAxisAlignment
+                  //                                              .end,
+                  //                                          children: [
+                  //                                            TextWidget(
+                  //                                                text:
+                  //                                                "${resJson["net_amount"]}",
+                  //                                                t_color:
+                  //                                                c_black,
+                  //                                                fontWeight:
+                  //                                                FontWeight
+                  //                                                    .w600,
+                  //                                                fontSize: 13),
+                  //                                            TextWidget(
+                  //                                                text: "${resJson["tax"]}",
+                  //                                                t_color:
+                  //                                                c_black,
+                  //                                                fontWeight:
+                  //                                                FontWeight
+                  //                                                    .w600,
+                  //                                                fontSize: 13),
+                  //                                            TextWidget(
+                  //                                                text:
+                  //                                                "${resJson["grand_amount"]}",
+                  //                                                t_color:
+                  //                                                c_black,
+                  //                                                fontWeight:
+                  //                                                FontWeight
+                  //                                                    .w600,
+                  //                                                fontSize: 13),
+                  //                                          ],
+                  //                                        )
+                  //                                      ],
+                  //                                    )
+                  //                                  ],
+                  //                                ),
+                  //                              ),
+                  //                            ],
+                  //                          ),
+                  //                        ),
+                  //                        actions: <Widget>[
+                  //                          InkWell(
+                  //                            onTap: () {
+                  //                              Navigator.pop(context);
+                  //                            },
+                  //                            child: CustomButton(
+                  //                                backColor: c_black,
+                  //                                text: "Okay",
+                  //                                c_color: c_white,
+                  //                                fontWeight: FontWeight.w400,
+                  //                                fontSize: 17),
+                  //                          ),
+                  //                        ],
+                  //                      );
+                  //                    },
+                  //                  );
+                  //                }
+                  //                else(
+                  //                EasyLoading.showToast("Something went wrong.")
+                  //                );
+                  //               });
+                  //             },
+                  //             child: Card(
+                  //               child: Padding(
+                  //                 padding: const EdgeInsets.symmetric(
+                  //                     horizontal: 5.0),
+                  //                 child: Container(
+                  //                   width: double.infinity,
+                  //                   padding: EdgeInsets.all(10),
+                  //                   child: Column(
+                  //                     crossAxisAlignment:
+                  //                         CrossAxisAlignment.start,
+                  //                     children: [
+                  //                       TextWidget(
+                  //                           text:
+                  //                               "Donated on : ${state.response[index]["created_at"]}",
+                  //                           t_color: c_black,
+                  //                           fontWeight: FontWeight.w700,
+                  //                           fontSize:
+                  //                               getProportionateScreenWidth(3)),
+                  //                       Space(
+                  //                         height: 10,
+                  //                       ),
+                  //                       TextWidget(
+                  //                           text:
+                  //                               "Amount : ${indianRupeesFormat.format(double.parse(state.response[index]["amount"]))}",
+                  //                           t_color: c_black,
+                  //                           fontWeight: FontWeight.w700,
+                  //                           fontSize:
+                  //                               getProportionateScreenWidth(3))
+                  //                     ],
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           )),
+                  //         ),
+                  //       );
+                  //     });
                 }
                 if (state is HistoryError) {
                   return Container();
