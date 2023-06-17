@@ -198,15 +198,19 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextWidget(
+          Expanded(
+            flex: 1,
+            child: TextWidget(
               text: "History",
               t_color: c_black,
               fontWeight: FontWeight.w400,
-              fontSize: 23),
+              fontSize: 23),),
+
           Space(
             height: 20,
           ),
           Expanded(
+            flex: 10,
             child: BlocBuilder<HistoryCubit, HistoryState>(
               builder: (context, state) {
                 if (state is HistoryInitial) {
@@ -214,10 +218,6 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                   return Container();
                 }
                 if (state is HistoryLoaded) {
-
-
-
-
                   return AnimationLimiter(
                     child: ListView.builder(
                         itemCount: state.response.length,
@@ -474,62 +474,65 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
           Space(
             height: 20,
           ),
-          MouseRegion(
-            child: InkWell(
-                onTap: () async {
-                  // bool res = await showDialog(
-                  //     barrierDismissible: false,
-                  //     context: context,
-                  //     builder: (BuildContext context) {
-                  //       return AlertDialog(
-                  //         backgroundColor: c_white.withOpacity(0.9),
-                  //         elevation: 0,
-                  //         content: Column(
-                  //           mainAxisSize: MainAxisSize.min,
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             TextWidget(
-                  //                 text: "Sucess",
-                  //                 t_color: c_black,
-                  //                 fontWeight: FontWeight.w400,
-                  //                 fontSize: 25),
-                  //             Space(height: 23.0),
-                  //             TextWidget(
-                  //                 text:
-                  //                     "You have sucessfully\n\nDonated ₹ 1,00,000/- ",
-                  //                 t_color: c_black,
-                  //                 fontWeight: FontWeight.w400,
-                  //                 fontSize: 18),
-                  //             Space(height: 21.0),
-                  //           ],
-                  //         ),
-                  //         actions: [
-                  //           InkWell(
-                  //               onTap: () {
-                  //                 Navigator.pop(context, true);
-                  //                 // Navigator.push(context,
-                  //                 //     MaterialPageRoute(builder: (context) => DonatePage()));
-                  //               },
-                  //               child: CustomButton(
-                  //                   backColor: c_black,
-                  //                   text: "Okay",
-                  //                   c_color: c_white,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   fontSize: 17)),
-                  //         ],
-                  //       );
-                  //     });
-                  // if (res) {
-                  //   BlocProvider.of<StatusCubit>(context).setDonate();
-                  // }
-                  BlocProvider.of<StatusCubit>(context).setDonate();
-                },
-                child: CustomButton(
-                    backColor: c_black,
-                    text: "Home",
-                    c_color: c_white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17)),
+          Expanded(
+            flex: 1,
+            child: MouseRegion(
+              child: InkWell(
+                  onTap: () async {
+                    // bool res = await showDialog(
+                    //     barrierDismissible: false,
+                    //     context: context,
+                    //     builder: (BuildContext context) {
+                    //       return AlertDialog(
+                    //         backgroundColor: c_white.withOpacity(0.9),
+                    //         elevation: 0,
+                    //         content: Column(
+                    //           mainAxisSize: MainAxisSize.min,
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             TextWidget(
+                    //                 text: "Sucess",
+                    //                 t_color: c_black,
+                    //                 fontWeight: FontWeight.w400,
+                    //                 fontSize: 25),
+                    //             Space(height: 23.0),
+                    //             TextWidget(
+                    //                 text:
+                    //                     "You have sucessfully\n\nDonated ₹ 1,00,000/- ",
+                    //                 t_color: c_black,
+                    //                 fontWeight: FontWeight.w400,
+                    //                 fontSize: 18),
+                    //             Space(height: 21.0),
+                    //           ],
+                    //         ),
+                    //         actions: [
+                    //           InkWell(
+                    //               onTap: () {
+                    //                 Navigator.pop(context, true);
+                    //                 // Navigator.push(context,
+                    //                 //     MaterialPageRoute(builder: (context) => DonatePage()));
+                    //               },
+                    //               child: CustomButton(
+                    //                   backColor: c_black,
+                    //                   text: "Okay",
+                    //                   c_color: c_white,
+                    //                   fontWeight: FontWeight.w400,
+                    //                   fontSize: 17)),
+                    //         ],
+                    //       );
+                    //     });
+                    // if (res) {
+                    //   BlocProvider.of<StatusCubit>(context).setDonate();
+                    // }
+                    BlocProvider.of<StatusCubit>(context).setDonate();
+                  },
+                  child: CustomButton(
+                      backColor: c_black,
+                      text: "Home",
+                      c_color: c_white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17)),
+            ),
           ),
           Space(
             height: 20,

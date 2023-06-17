@@ -12,7 +12,13 @@ class HistoryAPI {
   late final Dio _dio;
 
   HistoryAPI() {
-    _dio = Dio(BaseOptions(baseUrl: ApiURL.baseUrl));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: ApiURL.baseUrl,
+          connectTimeout: Duration(seconds: 60),
+          receiveTimeout: Duration(seconds: 60),
+      ),
+    );
     _dio.interceptors.add(DioInterceptors());
   }
 
@@ -35,8 +41,6 @@ class HistoryAPI {
       }
     } on DioException catch (e) {
       EasyLoading.dismiss();
-
-      // await _saveToken(response.data);
       if (e.response?.data != null) {
         EasyLoading.showToast("Something went wrong.");
         //  EasyLoading.showToast(e.response?.data);

@@ -9,12 +9,15 @@ import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
 import 'package:donationapp/src/bloc/PayNowBloc/pay_now_cubit.dart';
 import 'package:donationapp/src/bloc/StatusBloc/status_cubit.dart';
 import 'package:donationapp/src/constants/common_constant/icons_assets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_web/razorpay_web.dart';
 
@@ -30,7 +33,11 @@ import '../../constants/widget_constant/custom_button.dart';
 import '../../constants/widget_constant/dialog_widget.dart';
 import '../../constants/widget_constant/space.dart';
 import '../../constants/widget_constant/text_widget.dart';
+import '../../models/post.dart';
+import '../../models/post_model.dart';
+import '../../service/Api_url/api_urls.dart';
 import 'donatePage_mobile.dart';
+import 'package:http/http.dart' as http;
 
 class DonatePage extends StatefulWidget {
   DonatePage({Key? key}) : super(key: key);
@@ -39,7 +46,107 @@ class DonatePage extends StatefulWidget {
   State<DonatePage> createState() => _DonatePageState();
 }
 
+
+
+
 class _DonatePageState extends State<DonatePage> {
+
+
+  // At the beginning, we fetch the first 20 posts
+  int _page = 1;
+  // you can change this value to fetch more or less posts per page (10, 15, 5, etc)
+  final int _limit = 10;
+
+  // There is next page or not
+  bool _hasNextPage = true;
+
+  // Used to display loading indicators when _firstLoad function is running
+  bool _isFirstLoadRunning = false;
+
+  // Used to display loading indicators when _loadMore function is running
+  bool _isLoadMoreRunning = false;
+
+  // This holds the posts fetched from the server
+  List _posts = [];
+
+  // This function will be called when the app launches (see the initState function)
+  void _firstLoad() async {
+    setState(() {
+      _isFirstLoadRunning = true;
+    });
+    try {
+      final res =
+      await http.get(Uri.parse("${ApiURL.baseUrl}/api/beneficiaries?_page=$_page&_limit=$_limit"));
+      setState(() {
+        _posts = json.decode(res.body);
+      });
+    } catch (err) {
+      if (kDebugMode) {
+        print('Something went wrong');
+      }
+    }
+
+    setState(() {
+      _isFirstLoadRunning = false;
+    });
+  }
+
+  // This function will be triggered whenver the user scroll
+  // to near the bottom of the list view
+  void _loadMore() async {
+    if (_hasNextPage == true &&
+        _isFirstLoadRunning == false &&
+        _isLoadMoreRunning == false &&
+        _controller.position.extentAfter < 300) {
+      setState(() {
+        _isLoadMoreRunning = true; // Display a progress indicator at the bottom
+      });
+      _page += 1; // Increase _page by 1
+      try {
+        final res =
+        await http.get(Uri.parse("${ApiURL.baseUrl}/api/beneficiaries?_page=$_page&_limit=$_limit"));
+
+        final List fetchedPosts = json.decode(res.body);
+        if (fetchedPosts.isNotEmpty) {
+          setState(() {
+            _posts.addAll(fetchedPosts);
+          });
+        } else {
+          // This means there is no more data
+          // and therefore, we will not send another GET request
+          setState(() {
+            _hasNextPage = false;
+          });
+        }
+      } catch (err) {
+        if (kDebugMode) {
+          print('Something went wrong!');
+        }
+      }
+
+      setState(() {
+        _isLoadMoreRunning = false;
+      });
+    }
+  }
+
+  // The controller for the ListView
+  late ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    getToken();
+    _firstLoad();
+    _controller = ScrollController()..addListener(_loadMore);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_loadMore);
+    super.dispose();
+  }
+
   List amount = [
     {"amount": "5000"},
     {"amount": "10000"},
@@ -69,12 +176,7 @@ class _DonatePageState extends State<DonatePage> {
   TextEditingController createAddress = TextEditingController();
   TextEditingController createPassword = TextEditingController();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getToken();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -293,245 +395,275 @@ class _DonatePageState extends State<DonatePage> {
                 if (state is HistoryLoaded) {
 
 
-                  return AnimationLimiter(
-                    child: ListView.builder(
-                      padding: EdgeInsets.all(MediaQuery.of(context).size.width / 150),
-                      //  padding: EdgeInsets.symmetric(horizontal: 10),
-                      physics:
-                      BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                      itemCount: state.response.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return AnimationConfiguration.staggeredList(
-                          position: index,
-                          delay: Duration(milliseconds: 100),
-                          child: SlideAnimation(
-                            duration: Duration(milliseconds: 2500),
-                            curve: Curves.fastLinearToSlowEaseIn,
-                            child: FadeInAnimation(
-                              curve: Curves.fastLinearToSlowEaseIn,
-                              duration: Duration(milliseconds: 2500),
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  //  height: MediaQuery.of(context).size.width / 25,
-                                  // decoration: BoxDecoration(
-                                  //     color: c_black.withOpacity(0.5),
-                                  //     border: Border.all(color: c_black)),
-                                  child: Center(
-                                      child: InkWell(
-                                        onTap: () {
-                                          BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((resJson){
-                                            if(resJson != false){
-                                              // EasyLoading.showToast(resJson.toString());
-                                              showDialog<void>(
-                                                barrierDismissible: false,
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: TextWidget(
-                                                        text: "Beneficiaries List",
-                                                        t_color: c_black,
-                                                        fontWeight: FontWeight.w400,
-                                                        fontSize: 15),
-                                                    content: SingleChildScrollView(
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          Container(
-                                                            width: 600,
-                                                            child: Column(
-                                                              children: [
-                                                                Container(
-                                                                  width: 600,
-                                                                  height:
-                                                                  getProportionateScreenWidth(
-                                                                      100),
-                                                                  child: ListView.builder(
-                                                                      itemCount: resJson["payment_details"].length,
-                                                                      itemBuilder:
-                                                                          (BuildContext
-                                                                      context,
-                                                                          int index) {
-                                                                        return Card(
-                                                                          child: ListTile(
-                                                                            title: Text(
-                                                                              "${resJson["payment_details"][index]["name"]}",
-                                                                              style: TextStyle(
-                                                                                  color:
-                                                                                  c_black,
-                                                                                  fontWeight:
-                                                                                  FontWeight
-                                                                                      .w700,
-                                                                                  fontSize:
-                                                                                  15),
-                                                                            ),
-                                                                            trailing:
-                                                                            Text(
-                                                                              "${resJson["payment_details"][index]["amount"]}",
-                                                                              style: TextStyle(
-                                                                                  color:
-                                                                                  c_black,
-                                                                                  fontWeight:
-                                                                                  FontWeight
-                                                                                      .w700,
-                                                                                  fontSize:
-                                                                                  15),
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      }),
-                                                                ),
-                                                                Space(
-                                                                  height: 10,
-                                                                ),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .end,
-                                                                  crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                                  children: [
-                                                                    Column(
-                                                                      crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .end,
+                  // ListView.builder(
+                  //   controller: _controller,
+                  //   itemCount: _posts.length,
+                  //   itemBuilder: (_, index) => SizedBox(
+                  //     height: 300,
+                  //     child: Card(
+                  //       margin: const EdgeInsets.symmetric(
+                  //           vertical: 8, horizontal: 10),
+                  //       child: ListTile(
+                  //         title: Text(_posts[index]['id'].toString()),
+                  //         subtitle: Text(_posts[index]['name'].toString()),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
+                  return Column(
+                    children: [
+                      Expanded(
+                        child:  AnimationLimiter(
+                          child: ListView.builder(
+                            controller: _controller,
+                            padding: EdgeInsets.all(MediaQuery.of(context).size.width / 150),
+                            //  padding: EdgeInsets.symmetric(horizontal: 10),
+                            physics:
+                            BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                            itemCount: _posts.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return AnimationConfiguration.staggeredList(
+                                position: index,
+                                delay: Duration(milliseconds: 100),
+                                child: SlideAnimation(
+                                  duration: Duration(milliseconds: 2500),
+                                  curve: Curves.fastLinearToSlowEaseIn,
+                                  child: FadeInAnimation(
+                                      curve: Curves.fastLinearToSlowEaseIn,
+                                      duration: Duration(milliseconds: 2500),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(bottom: 8.0),
+                                        child: Container(
+                                          width: double.infinity,
+                                          //  height: MediaQuery.of(context).size.width / 25,
+                                          // decoration: BoxDecoration(
+                                          //     color: c_black.withOpacity(0.5),
+                                          //     border: Border.all(color: c_black)),
+                                          child: Center(
+                                              child: InkWell(
+                                                onTap: () {
+                                                  BlocProvider.of<BeneficiariesCubit>(context).getBeneficiariesList(state.response[index]["razorpay_payment_id"].toString()).then((resJson){
+                                                    if(resJson != false){
+                                                      // EasyLoading.showToast(resJson.toString());
+                                                      showDialog<void>(
+                                                        barrierDismissible: false,
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return AlertDialog(
+                                                            title: TextWidget(
+                                                                text: "Beneficiaries List",
+                                                                t_color: c_black,
+                                                                fontWeight: FontWeight.w400,
+                                                                fontSize: 15),
+                                                            content: SingleChildScrollView(
+                                                              child: Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: [
+                                                                  Container(
+                                                                    width: 600,
+                                                                    child: Column(
                                                                       children: [
-                                                                        TextWidget(
-                                                                            text:
-                                                                            "Net Amount : ",
-                                                                            t_color:
-                                                                            c_black,
-                                                                            fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                            fontSize: 13),
-                                                                        TextWidget(
-                                                                            text:
-                                                                            "Tax : ",
-                                                                            t_color:
-                                                                            c_black,
-                                                                            fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                            fontSize: 13),
-                                                                        TextWidget(
-                                                                            text:
-                                                                            "Grand Amount : ",
-                                                                            t_color:
-                                                                            c_black,
-                                                                            fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                            fontSize: 13),
+                                                                        Container(
+                                                                          width: 600,
+                                                                          height:
+                                                                          getProportionateScreenWidth(
+                                                                              100),
+                                                                          child: ListView.builder(
+                                                                              itemCount: resJson["payment_details"].length,
+                                                                              itemBuilder:
+                                                                                  (BuildContext
+                                                                              context,
+                                                                                  int index) {
+                                                                                return Card(
+                                                                                  child: ListTile(
+                                                                                    title: Text(
+                                                                                      "${resJson["payment_details"][index]["name"]}",
+                                                                                      style: TextStyle(
+                                                                                          color:
+                                                                                          c_black,
+                                                                                          fontWeight:
+                                                                                          FontWeight
+                                                                                              .w700,
+                                                                                          fontSize:
+                                                                                          15),
+                                                                                    ),
+                                                                                    trailing:
+                                                                                    Text(
+                                                                                      "${resJson["payment_details"][index]["amount"]}",
+                                                                                      style: TextStyle(
+                                                                                          color:
+                                                                                          c_black,
+                                                                                          fontWeight:
+                                                                                          FontWeight
+                                                                                              .w700,
+                                                                                          fontSize:
+                                                                                          15),
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              }),
+                                                                        ),
+                                                                        Space(
+                                                                          height: 10,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .end,
+                                                                          crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                          children: [
+                                                                            Column(
+                                                                              crossAxisAlignment:
+                                                                              CrossAxisAlignment
+                                                                                  .end,
+                                                                              children: [
+                                                                                TextWidget(
+                                                                                    text:
+                                                                                    "Net Amount : ",
+                                                                                    t_color:
+                                                                                    c_black,
+                                                                                    fontWeight:
+                                                                                    FontWeight
+                                                                                        .w600,
+                                                                                    fontSize: 13),
+                                                                                TextWidget(
+                                                                                    text:
+                                                                                    "Tax : ",
+                                                                                    t_color:
+                                                                                    c_black,
+                                                                                    fontWeight:
+                                                                                    FontWeight
+                                                                                        .w600,
+                                                                                    fontSize: 13),
+                                                                                TextWidget(
+                                                                                    text:
+                                                                                    "Grand Amount : ",
+                                                                                    t_color:
+                                                                                    c_black,
+                                                                                    fontWeight:
+                                                                                    FontWeight
+                                                                                        .w600,
+                                                                                    fontSize: 13),
+                                                                              ],
+                                                                            ),
+                                                                            Column(
+                                                                              crossAxisAlignment:
+                                                                              CrossAxisAlignment
+                                                                                  .end,
+                                                                              children: [
+                                                                                TextWidget(
+                                                                                    text:
+                                                                                    "${resJson["net_amount"]}",
+                                                                                    t_color:
+                                                                                    c_black,
+                                                                                    fontWeight:
+                                                                                    FontWeight
+                                                                                        .w600,
+                                                                                    fontSize: 13),
+                                                                                TextWidget(
+                                                                                    text: "${resJson["tax"]}",
+                                                                                    t_color:
+                                                                                    c_black,
+                                                                                    fontWeight:
+                                                                                    FontWeight
+                                                                                        .w600,
+                                                                                    fontSize: 13),
+                                                                                TextWidget(
+                                                                                    text:
+                                                                                    "${resJson["grand_amount"]}",
+                                                                                    t_color:
+                                                                                    c_black,
+                                                                                    fontWeight:
+                                                                                    FontWeight
+                                                                                        .w600,
+                                                                                    fontSize: 13),
+                                                                              ],
+                                                                            )
+                                                                          ],
+                                                                        )
                                                                       ],
                                                                     ),
-                                                                    Column(
-                                                                      crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .end,
-                                                                      children: [
-                                                                        TextWidget(
-                                                                            text:
-                                                                            "${resJson["net_amount"]}",
-                                                                            t_color:
-                                                                            c_black,
-                                                                            fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                            fontSize: 13),
-                                                                        TextWidget(
-                                                                            text: "${resJson["tax"]}",
-                                                                            t_color:
-                                                                            c_black,
-                                                                            fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                            fontSize: 13),
-                                                                        TextWidget(
-                                                                            text:
-                                                                            "${resJson["grand_amount"]}",
-                                                                            t_color:
-                                                                            c_black,
-                                                                            fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                            fontSize: 13),
-                                                                      ],
-                                                                    )
-                                                                  ],
-                                                                )
-                                                              ],
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
+                                                            actions: <Widget>[
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  Navigator.pop(context);
+                                                                },
+                                                                child: CustomButton(
+                                                                    backColor: c_black,
+                                                                    text: "Okay",
+                                                                    c_color: c_white,
+                                                                    fontWeight: FontWeight.w400,
+                                                                    fontSize: 17),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                    else(
+                                                        EasyLoading.showToast("Something went wrong.")
+                                                    );
+                                                  });
+                                                },
+                                                child: Card(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                        horizontal: 5.0),
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      padding: EdgeInsets.all(10),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                        children: [
+                                                          TextWidget(
+                                                              text:
+                                                              "Donated on : ${_posts[index]['id'].toString()}",
+                                                              t_color: c_black,
+                                                              fontWeight: FontWeight.w700,
+                                                              fontSize:
+                                                              getProportionateScreenWidth(3)),
+                                                          Space(
+                                                            height: 10,
                                                           ),
+                                                          TextWidget(
+                                                              text:
+                                                              "Amount : ${_posts[index]['name'].toString()}",
+                                                              t_color: c_black,
+                                                              fontWeight: FontWeight.w700,
+                                                              fontSize:
+                                                              getProportionateScreenWidth(3))
                                                         ],
                                                       ),
                                                     ),
-                                                    actions: <Widget>[
-                                                      InkWell(
-                                                        onTap: () {
-                                                          Navigator.pop(context);
-                                                        },
-                                                        child: CustomButton(
-                                                            backColor: c_black,
-                                                            text: "Okay",
-                                                            c_color: c_white,
-                                                            fontWeight: FontWeight.w400,
-                                                            fontSize: 17),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            }
-                                            else(
-                                                EasyLoading.showToast("Something went wrong.")
-                                            );
-                                          });
-                                        },
-                                        child: Card(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              padding: EdgeInsets.all(10),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: [
-                                                  TextWidget(
-                                                      text:
-                                                      "Donated on : ${state.response[index]["created_at"]}",
-                                                      t_color: c_black,
-                                                      fontWeight: FontWeight.w700,
-                                                      fontSize:
-                                                      getProportionateScreenWidth(3)),
-                                                  Space(
-                                                    height: 10,
                                                   ),
-                                                  TextWidget(
-                                                      text:
-                                                      "Amount : ${indianRupeesFormat.format(double.parse(state.response[index]["amount"]))}",
-                                                      t_color: c_black,
-                                                      fontWeight: FontWeight.w700,
-                                                      fontSize:
-                                                      getProportionateScreenWidth(3))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                                ),
+                                              )),
                                         ),
-                                      )),
+                                      )
+                                  ),
                                 ),
-                              )
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
+                        )
+
+
+                      ),
+                      if (_hasNextPage == false)
+                        Container(
+
+                        ),
+                    ],
                   );
+
 
                   // return ListView.builder(
                   //     itemCount: state.response.length,

@@ -21,8 +21,8 @@ class TextWidget extends StatelessWidget {
     return Container(
     //  padding: EdgeInsets.zero,
       child: Text('$text',
-
-          style: GoogleFonts.inter(
+//Libre Bodoni
+          style: GoogleFonts.libreBodoni(
               height: 1,
               color: t_color, fontWeight: fontWeight, fontSize: fontSize)
               .copyWith()
