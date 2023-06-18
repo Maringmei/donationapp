@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 part 'status_state.dart';
 
 class StatusCubit extends Cubit<StatusState> {
-  StatusCubit() : super(StatusInitial(status: 0));
+  StatusCubit() : super(StatusInitial(status: 2));
 
   void setDonate(){
     emit(StatusDonate(status: 0));

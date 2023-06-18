@@ -22,7 +22,7 @@ class TextWidget extends StatelessWidget {
     //  padding: EdgeInsets.zero,
       child: Text('$text',
 //Libre Bodoni
-          style: GoogleFonts.libreBodoni(
+          style: GoogleFonts.poppins(
               height: 1,
               color: t_color, fontWeight: fontWeight, fontSize: fontSize)
               .copyWith()

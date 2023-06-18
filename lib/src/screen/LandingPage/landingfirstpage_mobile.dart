@@ -3,6 +3,7 @@ import 'dart:js_interop';
 import 'package:donationapp/src/Storage/storage.dart';
 import 'package:donationapp/src/bloc/DashboardBloc/dashboard_cubit.dart';
 import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
+import 'package:donationapp/src/bloc/StatusBloc/status_cubit.dart';
 import 'package:donationapp/src/constants/common_constant/color_constant.dart';
 import 'package:donationapp/src/constants/widget_constant/text_widget.dart';
 import 'package:donationapp/src/screen/DonatePage/donatePage_mobile.dart';
@@ -32,7 +33,7 @@ class LandingFirstPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: c_black,
         title: TextWidget(
-            text: "Mateng Manipur",
+            text: "Tengbang",
             t_color: c_white,
             fontWeight: FontWeight.w700,
             fontSize: 20),
@@ -99,10 +100,12 @@ class LandingFirstPage extends StatelessWidget {
                                         BlocProvider.of<LoginstatusCubit>(
                                                 context)
                                             .setLogout();
+                                        BlocProvider.of<StatusCubit>(context).setLogin();
                                       } else {
                                         BlocProvider.of<LoginstatusCubit>(
                                                 context)
                                             .setLogin();
+                                        BlocProvider.of<StatusCubit>(context).setBenificiaries();
                                       }
 
                                       // showDialog<void>(
@@ -427,8 +430,6 @@ class LandingFirstPage extends StatelessWidget {
                                       //     );
                                       //   },
                                       // );
-
-
                                     },
                                     child: TextWidget(
                                         text: "Donate Now",
@@ -470,8 +471,9 @@ class LandingFirstPage extends StatelessWidget {
                           child: BlocBuilder<DashboardCubit, DashboardState>(
                             builder: (context, state) {
                               //init
-                              if(state is DashboardInitial){
-                                BlocProvider.of<DashboardCubit>(context).getDashboard();
+                              if (state is DashboardInitial) {
+                                BlocProvider.of<DashboardCubit>(context)
+                                    .getDashboard();
                                 return Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -480,13 +482,13 @@ class LandingFirstPage extends StatelessWidget {
                                         t_color: c_white,
                                         fontWeight: FontWeight.w700,
                                         fontSize:
-                                        getProportionateScreenWidth(20)),
+                                            getProportionateScreenWidth(20)),
                                     TextWidget(
                                         text: "Donated",
                                         t_color: c_white,
                                         fontWeight: FontWeight.w400,
                                         fontSize:
-                                        getProportionateScreenWidth(13)),
+                                            getProportionateScreenWidth(13)),
                                     Space(
                                       height: 20,
                                     ),
@@ -495,13 +497,13 @@ class LandingFirstPage extends StatelessWidget {
                                         t_color: c_white,
                                         fontWeight: FontWeight.w700,
                                         fontSize:
-                                        getProportionateScreenWidth(20)),
+                                            getProportionateScreenWidth(20)),
                                     TextWidget(
                                         text: "Donors",
                                         t_color: c_white,
                                         fontWeight: FontWeight.w400,
                                         fontSize:
-                                        getProportionateScreenWidth(13)),
+                                            getProportionateScreenWidth(13)),
                                     Space(
                                       height: 20,
                                     ),
@@ -510,7 +512,7 @@ class LandingFirstPage extends StatelessWidget {
                                         t_color: c_white,
                                         fontWeight: FontWeight.w700,
                                         fontSize:
-                                        getProportionateScreenWidth(20)),
+                                            getProportionateScreenWidth(20)),
                                     TextWidget(
                                       text: "Benificiaries",
                                       t_color: c_white,
@@ -524,46 +526,55 @@ class LandingFirstPage extends StatelessWidget {
                                 );
                                 //loaded
                               }
-                              if(state is DashboardLoaded){
+                              if (state is DashboardLoaded) {
                                 return Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     TextWidget(
-                                        text: state.response == null ? "--" : indianRupeesFormat.format(state.response["donated"]),
+                                        text: state.response == null
+                                            ? "--"
+                                            : indianRupeesFormat.format(
+                                                state.response["donated"]),
                                         t_color: c_white,
                                         fontWeight: FontWeight.w700,
                                         fontSize:
-                                        getProportionateScreenWidth(22)),
+                                            getProportionateScreenWidth(22)),
                                     TextWidget(
                                         text: "Donated",
                                         t_color: c_white,
                                         fontWeight: FontWeight.w400,
                                         fontSize:
-                                        getProportionateScreenWidth(13)),
+                                            getProportionateScreenWidth(13)),
                                     Space(
                                       height: 20,
                                     ),
                                     TextWidget(
-                                        text: state.response == null ? "--" : state.response["donor"].toString(),
+                                        text: state.response == null
+                                            ? "--"
+                                            : state.response["donor"]
+                                                .toString(),
                                         t_color: c_white,
                                         fontWeight: FontWeight.w700,
                                         fontSize:
-                                        getProportionateScreenWidth(22)),
+                                            getProportionateScreenWidth(22)),
                                     TextWidget(
                                         text: "Donors",
                                         t_color: c_white,
                                         fontWeight: FontWeight.w400,
                                         fontSize:
-                                        getProportionateScreenWidth(13)),
+                                            getProportionateScreenWidth(13)),
                                     Space(
                                       height: 20,
                                     ),
                                     TextWidget(
-                                        text: state.response == null ? "--" : state.response["beneficiary"].toString(),
+                                        text: state.response == null
+                                            ? "--"
+                                            : state.response["beneficiary"]
+                                                .toString(),
                                         t_color: c_white,
                                         fontWeight: FontWeight.w700,
                                         fontSize:
-                                        getProportionateScreenWidth(22)),
+                                            getProportionateScreenWidth(22)),
                                     TextWidget(
                                       text: "Benificiaries",
                                       t_color: c_white,
@@ -584,13 +595,13 @@ class LandingFirstPage extends StatelessWidget {
                                       t_color: c_white,
                                       fontWeight: FontWeight.w700,
                                       fontSize:
-                                      getProportionateScreenWidth(20)),
+                                          getProportionateScreenWidth(20)),
                                   TextWidget(
                                       text: "Donated",
                                       t_color: c_white,
                                       fontWeight: FontWeight.w400,
                                       fontSize:
-                                      getProportionateScreenWidth(13)),
+                                          getProportionateScreenWidth(13)),
                                   Space(
                                     height: 20,
                                   ),
@@ -599,13 +610,13 @@ class LandingFirstPage extends StatelessWidget {
                                       t_color: c_white,
                                       fontWeight: FontWeight.w700,
                                       fontSize:
-                                      getProportionateScreenWidth(20)),
+                                          getProportionateScreenWidth(20)),
                                   TextWidget(
                                       text: "Donors",
                                       t_color: c_white,
                                       fontWeight: FontWeight.w400,
                                       fontSize:
-                                      getProportionateScreenWidth(13)),
+                                          getProportionateScreenWidth(13)),
                                   Space(
                                     height: 20,
                                   ),
@@ -614,7 +625,7 @@ class LandingFirstPage extends StatelessWidget {
                                       t_color: c_white,
                                       fontWeight: FontWeight.w700,
                                       fontSize:
-                                      getProportionateScreenWidth(20)),
+                                          getProportionateScreenWidth(20)),
                                   TextWidget(
                                     text: "Benificiaries",
                                     t_color: c_white,

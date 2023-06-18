@@ -52,7 +52,7 @@ class MyDrawer extends StatelessWidget {
                                       MainAxisAlignment.center,
                                       children: [
                                         TextWidget(
-                                            text: "Donation App",
+                                            text: "Tengbang",
                                             t_color: c_black_opa,
                                             fontWeight: FontWeight.w400,
                                             fontSize: 20)
@@ -104,7 +104,7 @@ class MyDrawer extends StatelessWidget {
                                 builder: (context, state) {
                                   return ListTile(
                                     title: TextWidget(
-                                        text: "History",
+                                        text: "Beneficiaries",
                                         t_color: c_black_opa,
                                         fontWeight: FontWeight.w400,
                                         fontSize: 18),
@@ -143,6 +143,8 @@ class MyDrawer extends StatelessWidget {
                                         await Store.clear(context);
                                         BlocProvider.of<LoginstatusCubit>(
                                             context).setLogout();
+                                        BlocProvider.of<StatusCubit>(
+                                            context).setLogin();
                                         // showAlertDialogLogout(context);
                                       } else {
                                         BlocProvider.of<StatusCubit>(context)

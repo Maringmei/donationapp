@@ -17,4 +17,13 @@ abstract class ApiURL {
   static const benificiariesListUrl = "/api/payments/details?payment_id=";
   static const historyUrl = "/api/payments/history";
 
+
+
+  static const seeMoreUrl = "/api/beneficiaries/getbeneficiary";
+  static const beneficiariesUrl = "/api/beneficiaries?";
+  static const beneUpdateUrl = "/api/beneficiaries/";
+
+
+
+
 }

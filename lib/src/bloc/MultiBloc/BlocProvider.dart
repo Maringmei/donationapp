@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../BeneficiariesBLoc/beneficiaries_cubit.dart';
 import '../ConfirmBloc/confirm_cubit.dart';
 import '../HistoryBloc/history_cubit.dart';
+import '../SeeMoreBloc/see_mode_cubit.dart';
 import '../StatusBloc/status_cubit.dart';
 
 class MultiBloc extends StatelessWidget {
@@ -44,6 +45,9 @@ class MultiBloc extends StatelessWidget {
       ),
       BlocProvider(
         create: (context) => HistoryCubit(),
+      ),
+      BlocProvider(
+        create: (context) => SeeModeCubit(),
       )
     ], child: widgets);
   }

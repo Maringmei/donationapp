@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import '../../../SizedConfig.dart';
 import '../../Storage/storage.dart';
 import '../../bloc/LoginStatus/loginstatus_cubit.dart';
+import '../../bloc/StatusBloc/status_cubit.dart';
 import '../../constants/widget_constant/custom_button.dart';
 import '../../constants/widget_constant/space.dart';
 import '../DonatePage/donatepage.dart';
@@ -36,7 +37,7 @@ class LandingFirstPageWeb extends StatelessWidget {
         centerTitle: true,
         backgroundColor: c_black,
         title: TextWidget(
-            text: "Mateng Manipur",
+            text: "Tengbang",
             t_color: c_white,
             fontWeight: FontWeight.w700,
             fontSize: 20),
@@ -291,9 +292,11 @@ class LandingFirstPageWeb extends StatelessWidget {
                                     if (token.isNull) {
                                       BlocProvider.of<LoginstatusCubit>(context)
                                           .setLogout();
+                                      BlocProvider.of<StatusCubit>(context).setLogin();
                                     } else {
                                       BlocProvider.of<LoginstatusCubit>(context)
                                           .setLogin();
+                                      BlocProvider.of<StatusCubit>(context).setBenificiaries();
                                     }
 
 
