@@ -4,8 +4,8 @@ import '../../env/env.dart';
 abstract class ApiURL {
 
   //Set Live or Staging
-  static const urlLive = "https://app.tengbang.globizsapp.com";
-  static const urlStaging = "https://app.tengbang.globizsapp.com";
+  static const urlLive = "https://app.mateng.globizsapp.com";
+  static const urlStaging = "https://app.mateng.globizsapp.com";
 
   static const baseUrl = isStaging ? urlStaging : urlLive;
 

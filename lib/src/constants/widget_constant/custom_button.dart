@@ -13,8 +13,10 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenW = MediaQuery.of(context).size.width;
+
     return  Container(
-      height: 40,
+      height: screenW >= 1500 ? 40 : 30,
       width: double.infinity,
       // decoration: BoxDecoration(
       //     border: Border.all(color: c_black) ,
@@ -28,7 +30,7 @@ class CustomButton extends StatelessWidget {
       //     color: backColor
       // ),
       decoration: BoxDecoration(
-          border: Border.all(color: c_black) ,
+          border: Border.all(color: c_black.withOpacity(0.5)) ,
           color: backColor
       ),
       child: Center(child: TextWidget(text: text, t_color: c_color, fontWeight: fontWeight, fontSize: fontSize)),

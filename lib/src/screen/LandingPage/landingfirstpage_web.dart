@@ -37,7 +37,7 @@ class LandingFirstPageWeb extends StatelessWidget {
         centerTitle: true,
         backgroundColor: c_black,
         title: TextWidget(
-            text: "Tengbang",
+            text: "Mateng",
             t_color: c_white,
             fontWeight: FontWeight.w700,
             fontSize: 20),

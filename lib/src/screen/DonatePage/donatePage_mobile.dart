@@ -63,7 +63,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
 
   // This function will be called when the app launches (see the initState function)
   void _firstLoad() async {
-    EasyLoading.show(status: "Please Wait...",dismissOnTap: false);
+    //EasyLoading.show(status: "Please Wait...",dismissOnTap: false);
     setState(() {
       _isFirstLoadRunning = true;
     });
@@ -222,7 +222,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextWidget(
-                            text: "Tengbang",
+                            text: "Mateng",
                             t_color: c_white,
                             fontWeight: FontWeight.w600,
                             fontSize: 20),
@@ -266,7 +266,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                     padding: const EdgeInsets.all(15),
                     child: Container(
                       width: double.infinity,
-                      height: MediaQuery.of(context).size.width / 0.8,
+                      height: MediaQuery.of(context).size.height / 1.5,
                       color: Colors.white.withOpacity(1),
                       child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -349,36 +349,45 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                         crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                         children: [
-                                          TextWidget(
-                                              text:
-                                              "Name : ${_posts[index]['name'].toString()}",
-                                              t_color: c_black,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize:
-                                              getProportionateScreenWidth(
-                                                  14)),
+                                          SizedBox(
+                                            width: getProportionateScreenWidth(300),
+                                            child: TextWidget(
+                                                text:
+                                                "Name : ${_posts[index]['name'].toString()}",
+                                                t_color: c_black,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize:
+                                                getProportionateScreenWidth(
+                                                    14)),
+                                          ),
                                           Space(
                                             height: 10,
                                           ),
-                                          TextWidget(
-                                              text:
-                                              "Phone : ${_posts[index]['mobile'].toString()}",
-                                              t_color: c_black,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize:
-                                              getProportionateScreenWidth(
-                                                  14)),
+                                          SizedBox(
+                                            width: getProportionateScreenWidth(300),
+                                            child: TextWidget(
+                                                text:
+                                                "Phone : ${_posts[index]['mobile'].toString()}",
+                                                t_color: c_black,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize:
+                                                getProportionateScreenWidth(
+                                                    14)),
+                                          ),
                                           Space(
                                             height: 10,
                                           ),
-                                          TextWidget(
-                                              text:
-                                              "Address : ${_posts[index]['address'].toString()}",
-                                              t_color: c_black,
-                                              fontWeight: FontWeight.w700,
-                                              fontSize:
-                                              getProportionateScreenWidth(
-                                                  14))
+                                          SizedBox(
+                                            width: getProportionateScreenWidth(300),
+                                            child: TextWidget(
+                                                text:
+                                                "Address : ${_posts[index]['address'].toString()}",
+                                                t_color: c_black,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize:
+                                                getProportionateScreenWidth(
+                                                    14)),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -423,7 +432,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                     BlocProvider.of<StatusCubit>(context).setDonate();
                   },
                   child: CustomButton(
-                      backColor: c_black,
+                      backColor: c_black.withOpacity(0.5),
                       text: "Donate",
                       c_color: c_white,
                       fontWeight: FontWeight.w400,
@@ -534,7 +543,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                                     "Beneficiary ID : ${state.response[index]['beneficiary_id'].toString()}",
                                                                     t_color: c_black,
                                                                     fontWeight:
-                                                                    FontWeight.w700,
+                                                                    FontWeight.w500,
                                                                     fontSize:
                                                                     getProportionateScreenWidth(
                                                                         10)),
@@ -546,7 +555,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                                     "Name : ${state.response[index]['name'].toString()}",
                                                                     t_color: c_black,
                                                                     fontWeight:
-                                                                    FontWeight.w700,
+                                                                    FontWeight.w500,
                                                                     fontSize:
                                                                     getProportionateScreenWidth(
                                                                         10)),
@@ -558,7 +567,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                                     "Phone : ${state.response[index]['mobile'].toString()}",
                                                                     t_color: c_black,
                                                                     fontWeight:
-                                                                    FontWeight.w700,
+                                                                    FontWeight.w500,
                                                                     fontSize:
                                                                     getProportionateScreenWidth(
                                                                         10)),
@@ -570,7 +579,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                                     "Address : ${state.response[index]['address'].toString()}",
                                                                     t_color: c_black,
                                                                     fontWeight:
-                                                                    FontWeight.w700,
+                                                                    FontWeight.w500,
                                                                     fontSize:
                                                                     getProportionateScreenWidth(
                                                                         10))
@@ -585,9 +594,9 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                                   style: ElevatedButton
                                                                       .styleFrom(
                                                                     foregroundColor:
-                                                                    Colors.black,
+                                                                    Colors.white,
                                                                     backgroundColor:
-                                                                    Colors.green,
+                                                                    Colors.black.withOpacity(0.5),
                                                                   ),
                                                                   onPressed: () async{
                                                                     showDialog<void>(
@@ -725,7 +734,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                                               },
                                                                               child:CustomButton(
                                                                                   backColor:
-                                                                                  c_black,
+                                                                                  c_black.withOpacity(0.5),
                                                                                   text:
                                                                                   "Copy",
                                                                                   c_color:
@@ -800,7 +809,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                   BlocProvider.of<SeeModeCubit>(context).getSeeMore();
                 },
                 child: CustomButton(
-                    backColor: c_black,
+                    backColor: c_black.withOpacity(0.5),
                     text: "See More",
                     c_color: c_white,
                     fontWeight: FontWeight.w400,
@@ -908,7 +917,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                 }
               },
               child: CustomButton(
-                  backColor: c_black,
+                  backColor: c_black.withOpacity(0.5),
                   text: "Login",
                   c_color: c_white,
                   fontWeight: FontWeight.w400,
@@ -1082,7 +1091,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                     }
                   },
                   child: CustomButton(
-                      backColor: c_black,
+                      backColor: c_black.withOpacity(0.5),
                       text: "Create",
                       c_color: c_white,
                       fontWeight: FontWeight.w400,

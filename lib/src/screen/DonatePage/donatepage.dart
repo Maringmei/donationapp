@@ -68,7 +68,7 @@ class _DonatePageState extends State<DonatePage> {
 
   // This function will be called when the app launches (see the initState function)
   void _firstLoad() async {
-    EasyLoading.show(status: "Please Wait...", dismissOnTap: false);
+    // EasyLoading.show(status: "Please Wait...", dismissOnTap: false);
     setState(() {
       _isFirstLoadRunning = true;
     });
@@ -175,6 +175,12 @@ class _DonatePageState extends State<DonatePage> {
   TextEditingController createAddress = TextEditingController();
   TextEditingController createPassword = TextEditingController();
 
+  bool _home = false;
+  bool _about = false;
+  bool _donate = false;
+  bool _bene = false;
+  bool _login = false;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -213,57 +219,99 @@ class _DonatePageState extends State<DonatePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextWidget(
-                                text: "Tengbang",
+                                text: "Mateng",
                                 t_color: c_white,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 20),
                             Row(
                               children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    BlocProvider.of<StatusCubit>(context)
-                                        .setDonate();
-                                    BlocProvider.of<DashboardCubit>(context)
-                                        .refreshDashboard();
+                                MouseRegion(
+                                  onEnter: (value) {
+                                    _home = true;
+                                    setState(() {
+
+                                    });
                                   },
-                                  child: TextWidget(
-                                      text: "Home",
-                                      t_color: c_white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15),
+                                  onExit: (value) {
+                                    _home = false;
+                                    setState(() {
+
+                                    });
+                                  },
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      BlocProvider.of<StatusCubit>(context)
+                                          .setDonate();
+                                      BlocProvider.of<DashboardCubit>(context)
+                                          .refreshDashboard();
+                                    },
+                                    child: TextWidget(
+                                        text: "Home",
+                                        t_color: _home == true ? c_gold : c_white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                  ),
                                 ),
                                 Space(
                                   width: 10,
                                 ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: TextWidget(
-                                      text: "About",
-                                      t_color: c_white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15),
+                                MouseRegion(
+                                  onEnter: (value) {
+                                    _about = true;
+                                    setState(() {
+
+                                    });
+                                  },
+                                  onExit: (value) {
+                                    _about = false;
+                                    setState(() {
+
+                                    });
+                                  },
+                                  child: InkWell(
+                                    onTap: () {},
+                                    child: TextWidget(
+                                        text: "About",
+                                        t_color: _about == true ? c_gold : c_white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                  ),
                                 ),
                                 Space(
                                   width: 10,
                                 ),
                                 BlocBuilder<LoginstatusCubit, LoginstatusState>(
                                   builder: (context, state) {
-                                    return InkWell(
-                                      onTap: () {
-                                        if (state.loginStatus) {
-                                          BlocProvider.of<StatusCubit>(context)
-                                              .setDonate();
-                                        } else {
-                                          BlocProvider.of<StatusCubit>(context)
-                                              .setLogin();
-                                        }
+                                    return MouseRegion(
+                                      onEnter: (value) {
+                                        _donate = true;
+                                        setState(() {
+
+                                        });
                                       },
-                                      child: TextWidget(
-                                          text: "Donate",
-                                          t_color: c_white,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15),
+                                      onExit: (value) {
+                                        _donate = false;
+                                        setState(() {
+
+                                        });
+                                      },
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (state.loginStatus) {
+                                            BlocProvider.of<StatusCubit>(context)
+                                                .setDonate();
+                                          } else {
+                                            BlocProvider.of<StatusCubit>(context)
+                                                .setLogin();
+                                          }
+                                        },
+                                        child: TextWidget(
+                                            text: "Donate",
+                                            t_color: _donate == true ? c_gold : c_white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                      ),
                                     );
                                   },
                                 ),
@@ -272,23 +320,37 @@ class _DonatePageState extends State<DonatePage> {
                                 ),
                                 BlocBuilder<LoginstatusCubit, LoginstatusState>(
                                   builder: (context, state) {
-                                    return InkWell(
-                                      onTap: () {
-                                        if (state.loginStatus) {
-                                          BlocProvider.of<StatusCubit>(context)
-                                              .setBenificiaries();
-                                          // BlocProvider.of<HistoryCubit>(context)
-                                          //     .refreshHistory();
-                                        } else {
-                                          BlocProvider.of<StatusCubit>(context)
-                                              .setLogin();
-                                        }
+                                    return MouseRegion(
+                                      onEnter: (value) {
+                                        _bene = true;
+                                        setState(() {
+
+                                        });
                                       },
-                                      child: TextWidget(
-                                          text: "Benefiaciaries",
-                                          t_color: c_white,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15),
+                                      onExit: (value) {
+                                        _bene = false;
+                                        setState(() {
+
+                                        });
+                                      },
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (state.loginStatus) {
+                                            BlocProvider.of<StatusCubit>(context)
+                                                .setBenificiaries();
+                                            // BlocProvider.of<HistoryCubit>(context)
+                                            //     .refreshHistory();
+                                          } else {
+                                            BlocProvider.of<StatusCubit>(context)
+                                                .setLogin();
+                                          }
+                                        },
+                                        child: TextWidget(
+                                            text: "Benefiaciaries",
+                                            t_color: _bene == true ? c_gold : c_white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                      ),
                                     );
                                   },
                                 ),
@@ -297,22 +359,36 @@ class _DonatePageState extends State<DonatePage> {
                                 ),
                                 BlocBuilder<LoginstatusCubit, LoginstatusState>(
                                   builder: (context, state) {
-                                    return InkWell(
-                                      onTap: () {
-                                        if (state.loginStatus) {
-                                          showAlertDialogLogout(context);
-                                        } else {
-                                          BlocProvider.of<StatusCubit>(context)
-                                              .setLogin();
-                                        }
+                                    return MouseRegion(
+                                      onEnter: (value) {
+                                        _login = true;
+                                        setState(() {
+
+                                        });
                                       },
-                                      child: TextWidget(
-                                          text: state.loginStatus
-                                              ? "Logout"
-                                              : "Login",
-                                          t_color: c_white,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15),
+                                      onExit: (value) {
+                                        _login = false;
+                                        setState(() {
+
+                                        });
+                                      },
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (state.loginStatus) {
+                                            showAlertDialogLogout(context);
+                                          } else {
+                                            BlocProvider.of<StatusCubit>(context)
+                                                .setLogin();
+                                          }
+                                        },
+                                        child: TextWidget(
+                                            text: state.loginStatus
+                                                ? "Logout"
+                                                : "Login",
+                                            t_color: _login == true ? c_gold : c_white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                      ),
                                     );
                                   },
                                 ),
@@ -351,7 +427,7 @@ class _DonatePageState extends State<DonatePage> {
                                   padding: EdgeInsets.all(40),
                                   width: double.infinity,
                                   height:
-                                      MediaQuery.of(context).size.width / 2.5,
+                                      MediaQuery.of(context).size.height / 1.3,
                                   color: Colors.white.withOpacity(1),
                                   child: BlocBuilder<StatusCubit, StatusState>(
                                     builder: (context, state) {
@@ -389,7 +465,7 @@ class _DonatePageState extends State<DonatePage> {
               text: "Donate",
               t_color: c_black,
               fontWeight: FontWeight.w400,
-              fontSize: 23),
+              fontSize: MediaQuery.of(context).size.width >= 1500 ? 23 : 20),
           Space(
             height: 20,
           ),
@@ -443,475 +519,401 @@ class _DonatePageState extends State<DonatePage> {
                                               child: Container(
                                                 width: double.infinity,
                                                 padding: EdgeInsets.all(10),
-                                                child:
-                                                Column(
+                                                child: Column(
                                                   children: [
-                                                    MediaQuery.of(context).size.width >= 1500 ?
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Expanded(flex: 7,
-                                                        child:Column(
-                                                          crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                          children: [
-                                                            TextWidget(
-                                                                text:
-                                                                "Beneficiary ID : ${state.response[index]['beneficiary_id'].toString()}",
-                                                                t_color: c_black,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize:
-                                                                getProportionateScreenWidth(
-                                                                    2.5)),
-                                                            Space(
-                                                              height: 10,
-                                                            ),
-                                                            TextWidget(
-                                                                text:
-                                                                "Name :  ${state.response[index]['name'].toString()}",
-                                                                t_color: c_black,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize:
-                                                                getProportionateScreenWidth(
-                                                                    2.5)),
-                                                            Space(
-                                                              height: 10,
-                                                            ),
-                                                            TextWidget(
-                                                                text:
-                                                                "Phone : ${state.response[index]['mobile'].toString()}",
-                                                                t_color: c_black,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize:
-                                                                getProportionateScreenWidth(
-                                                                    2.5)),
-                                                            Space(
-                                                              height: 10,
-                                                            ),
-                                                            TextWidget(
-                                                                text:
-                                                                "Address : ${state.response[index]['address'].toString()}",
-                                                                t_color: c_black,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize:
-                                                                getProportionateScreenWidth(
-                                                                    2.5)),
-                                                          ],
-                                                        ) ,
-                                                        ),
-                                                        Expanded(
-                                                            flex: 3,
-                                                            child: SizedBox(
-                                                              width: getProportionateScreenWidth(15),
-                                                              child: ElevatedButton(
-                                                                  style: ElevatedButton
-                                                                      .styleFrom(
-                                                                    foregroundColor:
-                                                                    Colors.black,
-                                                                    backgroundColor:
-                                                                    Colors.green,
-                                                                  ),
-                                                                  onPressed: () async{
-                                                                    showDialog<void>(
-                                                                      barrierDismissible:
-                                                                      false,
-                                                                      context: context,
-                                                                      builder:
-                                                                          (BuildContext
-                                                                      context) {
-                                                                        return AlertDialog(
-                                                                          title: TextWidget(
-                                                                              text:
-                                                                              "User Bank Details",
-                                                                              t_color:
-                                                                              c_black,
-                                                                              fontWeight:
-                                                                              FontWeight
-                                                                                  .w700,
-                                                                              fontSize:
-                                                                              20),
-                                                                          content:
-                                                                          Container(
-                                                                            width: 600,
-                                                                            child: Column(
-                                                                              crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                              mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                              children: [
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Name : ${state.response[index]["name"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Address : ${state.response[index]["address"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Mobile : ${state.response[index]["mobile"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Bank Name : ${state.response[index]["bank_name"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Account Name : ${state.response[index]["account_name"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Account Number : ${state.response[index]["account_number"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "IFSC : ${state.response[index]["ifsc"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                          actions: <Widget>[
-                                                                            InkWell(
-                                                                              onTap: () async{
-                                                                                await Clipboard.setData(ClipboardData(text:
-                                                                                "Name : ${state.response[index]["mobile"]}\n"
-                                                                                    "Address : ${state.response[index]["address"]}\n"
-                                                                                    "Address : ${state.response[index]["address"]}\n"
-                                                                                    "Mobile : ${state.response[index]["mobile"]}\n"
-                                                                                    "Bank Name : ${state.response[index]["bank_name"]}\n"
-                                                                                    "Account Name : ${state.response[index]["account_name"]}\n"
-                                                                                    "Account Number : ${state.response[index]["account_number"]}\n"
-                                                                                    "IFSC : ${state.response[index]["ifsc"]}\n"
-                                                                                )).then((value) {
-                                                                                  EasyLoading.showToast("Copied");
-                                                                                });
-                                                                                Navigator.pop(
-                                                                                    context);
-                                                                              },
-                                                                              child: CustomButton(
-                                                                                  backColor:
-                                                                                  c_black,
-                                                                                  text:
-                                                                                  "Copy",
-                                                                                  c_color:
-                                                                                  c_white,
-                                                                                  fontWeight:
-                                                                                  FontWeight
-                                                                                      .w400,
-                                                                                  fontSize:
-                                                                                  17),
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                    BeneUpdateAPI api = BeneUpdateAPI();
-                                                                    await api.BeneUpdateUser("${state.response[index]['id'].toString()}");
-                                                                  },
-                                                                  child: TextWidget(text: "Donate", t_color: c_white, fontWeight: FontWeight.w600, fontSize: getProportionateScreenWidth(2.1))),
-                                                            ))
-
-                                                      ],
-                                                    ) : Align(
-                                                      alignment: Alignment.centerLeft,
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: getProportionateScreenWidth(70),
-                                                            child: TextWidget(
-                                                                text:
-                                                                "Beneficiary ID :  ${state.response[index]['beneficiary_id'].toString()}",
-                                                                t_color: c_black,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize:
-                                                                getProportionateScreenWidth(
-                                                                    2.5)),
-                                                          ),
-                                                          Space(
-                                                            height: 10,
-                                                          ),
-                                                          SizedBox(
-                                                            width: getProportionateScreenWidth(70),
-                                                            child: TextWidget(
-                                                                text:
-                                                                "Name :  ${state.response[index]['name'].toString()}",
-                                                                t_color: c_black,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize:
-                                                                getProportionateScreenWidth(
-                                                                    2.5)),
-                                                          ),
-                                                          Space(
-                                                            height: 10,
-                                                          ),
-                                                          SizedBox(
-                                                            width: getProportionateScreenWidth(70),
-                                                            child: TextWidget(
-                                                                text:
-                                                                "Phone : ${state.response[index]['mobile'].toString()}",
-                                                                t_color: c_black,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize:
-                                                                getProportionateScreenWidth(
-                                                                    2.5)),
-                                                          ),
-                                                          Space(
-                                                            height: 10,
-                                                          ),
-                                                          SizedBox(
-                                                            width: getProportionateScreenWidth(70),
-                                                            child: TextWidget(
-                                                                text:
-                                                                "Address : ${state.response[index]['address'].toString()}",
-                                                                t_color: c_black,
-                                                                fontWeight:
-                                                                FontWeight.w700,
-                                                                fontSize:
-                                                                getProportionateScreenWidth(
-                                                                    2.5)),
-                                                          ),
-                                                          Space(
-                                                            height: 10,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 150,
-                                                            height: 25,
-                                                            child: ElevatedButton(
-                                                                style: ElevatedButton
-                                                                    .styleFrom(
-                                                                  foregroundColor:
-                                                                  Colors.black,
-                                                                  backgroundColor:
-                                                                  Colors.green,
-                                                                ),
-                                                                onPressed: () async{
-                                                                  showDialog<void>(
-                                                                    barrierDismissible:
-                                                                    false,
-                                                                    context: context,
-                                                                    builder:
-                                                                        (BuildContext
-                                                                    context) {
-                                                                      return AlertDialog(
-                                                                        title: TextWidget(
-                                                                            text:
-                                                                            "User Bank Details",
-                                                                            t_color:
+                                                    MediaQuery.of(context)
+                                                                .size
+                                                                .width >=
+                                                            1500
+                                                        ? Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 7,
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    TextWidget(
+                                                                        text:
+                                                                            "Beneficiary ID : ${state.response[index]['beneficiary_id'].toString()}",
+                                                                        t_color:
                                                                             c_black,
-                                                                            fontWeight:
+                                                                        fontWeight:
                                                                             FontWeight
-                                                                                .w700,
-                                                                            fontSize:
-                                                                            20),
-                                                                        content:
-                                                                        Container(
-                                                                          width: 600,
-                                                                          child: Column(
-                                                                            crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                            mainAxisSize:
-                                                                            MainAxisSize.min,
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                width: getProportionateScreenWidth(200),
-                                                                                child: TextWidget(
-                                                                                    text: "Name : ${state.response[index]["name"]}",
-                                                                                    t_color: c_black,
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Space(
-                                                                                height:
-                                                                                5,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: getProportionateScreenWidth(200),
-                                                                                child: TextWidget(
-                                                                                    text: "Address : ${state.response[index]["address"]}",
-                                                                                    t_color: c_black,
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Space(
-                                                                                height:
-                                                                                5,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: getProportionateScreenWidth(200),
-                                                                                child: TextWidget(
-                                                                                    text: "Mobile : ${state.response[index]["mobile"]}",
-                                                                                    t_color: c_black,
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Space(
-                                                                                height:
-                                                                                5,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: getProportionateScreenWidth(200),
-                                                                                child: TextWidget(
-                                                                                    text: "Bank Name : ${state.response[index]["bank_name"]}",
-                                                                                    t_color: c_black,
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Space(
-                                                                                height:
-                                                                                5,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: getProportionateScreenWidth(200),
-                                                                                child: TextWidget(
-                                                                                    text: "Account Name : ${state.response[index]["account_name"]}",
-                                                                                    t_color: c_black,
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Space(
-                                                                                height:
-                                                                                5,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: getProportionateScreenWidth(200),
-                                                                                child: TextWidget(
-                                                                                    text: "Account Number : ${state.response[index]["account_number"]}",
-                                                                                    t_color: c_black,
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Space(
-                                                                                height:
-                                                                                5,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                width: getProportionateScreenWidth(200),
-                                                                                child: TextWidget(
-                                                                                    text: "IFSC : ${state.response[index]["ifsc"]}",
-                                                                                    t_color: c_black,
-                                                                                    fontWeight: FontWeight.w700,
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Space(
-                                                                                height:
-                                                                                5,
-                                                                              ),
-                                                                            ],
-                                                                          ),
+                                                                                .w500,
+                                                                        fontSize:
+                                                                            getProportionateScreenWidth(2.5)),
+                                                                    Space(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    TextWidget(
+                                                                        text:
+                                                                            "Name :  ${state.response[index]['name'].toString()}",
+                                                                        t_color:
+                                                                            c_black,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                        fontSize:
+                                                                            getProportionateScreenWidth(2.5)),
+                                                                    Space(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    TextWidget(
+                                                                        text:
+                                                                            "Phone : ${state.response[index]['mobile'].toString()}",
+                                                                        t_color:
+                                                                            c_black,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                        fontSize:
+                                                                            getProportionateScreenWidth(2.5)),
+                                                                    Space(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    TextWidget(
+                                                                        text:
+                                                                            "Address : ${state.response[index]['address'].toString()}",
+                                                                        t_color:
+                                                                            c_black,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                        fontSize:
+                                                                            getProportionateScreenWidth(2.5)),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                  flex: 3,
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width:
+                                                                        getProportionateScreenWidth(
+                                                                            15),
+                                                                    child: ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                          foregroundColor:
+                                                                              Colors.white,
+                                                                          backgroundColor:
+                                                                              Colors.black.withOpacity(0.5),
                                                                         ),
-                                                                        actions: <Widget>[
-                                                                          InkWell(
-                                                                            onTap: () async{
-                                                                              await Clipboard.setData(ClipboardData(text:
-                                                                              "Name : ${state.response[index]["mobile"]}\n"
-                                                                                  "Address : ${state.response[index]["address"]}\n"
-                                                                                  "Address : ${state.response[index]["address"]}\n"
-                                                                                  "Mobile : ${state.response[index]["mobile"]}\n"
-                                                                                  "Bank Name : ${state.response[index]["bank_name"]}\n"
-                                                                                  "Account Name : ${state.response[index]["account_name"]}\n"
-                                                                                  "Account Number : ${state.response[index]["account_number"]}\n"
-                                                                                  "IFSC : ${state.response[index]["ifsc"]}\n"
-                                                                              )).then((value) {
-                                                                                EasyLoading.showToast("Copied");
-                                                                              });
-                                                                              Navigator.pop(
-                                                                                  context);
+                                                                        onPressed: () async {
+                                                                          showDialog<
+                                                                              void>(
+                                                                            barrierDismissible:
+                                                                                false,
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (BuildContext context) {
+                                                                              return AlertDialog(
+                                                                                title: TextWidget(text: "User Bank Details", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 20),
+                                                                                content: Container(
+                                                                                  width: 600,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    children: [
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Name : ${state.response[index]["name"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Address : ${state.response[index]["address"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Mobile : ${state.response[index]["mobile"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Bank Name : ${state.response[index]["bank_name"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Account Name : ${state.response[index]["account_name"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Account Number : ${state.response[index]["account_number"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "IFSC : ${state.response[index]["ifsc"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                actions: <Widget>[
+                                                                                  InkWell(
+                                                                                    onTap: () async {
+                                                                                      await Clipboard.setData(ClipboardData(
+                                                                                              text: "Name : ${state.response[index]["mobile"]}\n"
+                                                                                                  "Address : ${state.response[index]["address"]}\n"
+                                                                                                  "Address : ${state.response[index]["address"]}\n"
+                                                                                                  "Mobile : ${state.response[index]["mobile"]}\n"
+                                                                                                  "Bank Name : ${state.response[index]["bank_name"]}\n"
+                                                                                                  "Account Name : ${state.response[index]["account_name"]}\n"
+                                                                                                  "Account Number : ${state.response[index]["account_number"]}\n"
+                                                                                                  "IFSC : ${state.response[index]["ifsc"]}\n"))
+                                                                                          .then((value) {
+                                                                                        EasyLoading.showToast("Copied");
+                                                                                      });
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                    child: CustomButton(backColor: c_black, text: "Copy", c_color: c_white, fontWeight: FontWeight.w400, fontSize: 17),
+                                                                                  ),
+                                                                                ],
+                                                                              );
                                                                             },
-                                                                            child: CustomButton(
-                                                                                backColor:
-                                                                                c_black,
-                                                                                text:
-                                                                                "Copy",
-                                                                                c_color:
-                                                                                c_white,
-                                                                                fontWeight:
-                                                                                FontWeight
-                                                                                    .w400,
-                                                                                fontSize:
-                                                                                17),
-                                                                          ),
-                                                                        ],
-                                                                      );
-                                                                    },
-                                                                  );
-                                                                  BeneUpdateAPI api = BeneUpdateAPI();
-                                                                  await api.BeneUpdateUser("${state.response[index]['id'].toString()}");
-                                                                },
-                                                                child: TextWidget(text: "Donate", t_color: c_white, fontWeight: FontWeight.w600, fontSize: getProportionateScreenWidth(2.1))),
+                                                                          );
+                                                                          BeneUpdateAPI
+                                                                              api =
+                                                                              BeneUpdateAPI();
+                                                                          await api.BeneUpdateUser(
+                                                                              "${state.response[index]['id'].toString()}");
+                                                                        },
+                                                                        child: TextWidget(text: "Donate", t_color: c_white, fontWeight: FontWeight.w600, fontSize: getProportionateScreenWidth(2.5))),
+                                                                  ))
+                                                            ],
                                                           )
-                                                        ],
-                                                      ),
-                                                    ),
+                                                        : Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                SizedBox(
+                                                                  width:
+                                                                      getProportionateScreenWidth(
+                                                                          70),
+                                                                  child: TextWidget(
+                                                                      text:
+                                                                          "Beneficiary ID :  ${state.response[index]['beneficiary_id'].toString()}",
+                                                                      t_color:
+                                                                          c_black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          getProportionateScreenWidth(
+                                                                              2.5)),
+                                                                ),
+                                                                Space(
+                                                                  height: 10,
+                                                                ),
+                                                                SizedBox(
+                                                                  width:
+                                                                      getProportionateScreenWidth(
+                                                                          70),
+                                                                  child: TextWidget(
+                                                                      text:
+                                                                          "Name :  ${state.response[index]['name'].toString()}",
+                                                                      t_color:
+                                                                          c_black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          getProportionateScreenWidth(
+                                                                              2.5)),
+                                                                ),
+                                                                Space(
+                                                                  height: 10,
+                                                                ),
+                                                                SizedBox(
+                                                                  width:
+                                                                      getProportionateScreenWidth(
+                                                                          70),
+                                                                  child: TextWidget(
+                                                                      text:
+                                                                          "Phone : ${state.response[index]['mobile'].toString()}",
+                                                                      t_color:
+                                                                          c_black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          getProportionateScreenWidth(
+                                                                              2.5)),
+                                                                ),
+                                                                Space(
+                                                                  height: 10,
+                                                                ),
+                                                                SizedBox(
+                                                                  width:
+                                                                      getProportionateScreenWidth(
+                                                                          70),
+                                                                  child: TextWidget(
+                                                                      text:
+                                                                          "Address : ${state.response[index]['address'].toString()}",
+                                                                      t_color:
+                                                                          c_black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          getProportionateScreenWidth(
+                                                                              2.5)),
+                                                                ),
+                                                                Space(
+                                                                  height: 10,
+                                                                ),
+                                                                Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width: double
+                                                                        .infinity,
+                                                                    height: 25,
+                                                                    child: ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                          foregroundColor:
+                                                                              Colors.white,
+                                                                          backgroundColor:
+                                                                              Colors.black.withOpacity(0.5),
+                                                                        ),
+                                                                        onPressed: () async {
+                                                                          showDialog<
+                                                                              void>(
+                                                                            barrierDismissible:
+                                                                                false,
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (BuildContext context) {
+                                                                              return AlertDialog(
+                                                                                title: TextWidget(text: "User Bank Details", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 20),
+                                                                                content: Container(
+                                                                                  width: 600,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    children: [
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Name : ${state.response[index]["name"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Address : ${state.response[index]["address"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Mobile : ${state.response[index]["mobile"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Bank Name : ${state.response[index]["bank_name"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Account Name : ${state.response[index]["account_name"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "Account Number : ${state.response[index]["account_number"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                      SizedBox(
+                                                                                        width: getProportionateScreenWidth(200),
+                                                                                        child: TextWidget(text: "IFSC : ${state.response[index]["ifsc"]}", t_color: c_black, fontWeight: FontWeight.w700, fontSize: 14),
+                                                                                      ),
+                                                                                      Space(
+                                                                                        height: 5,
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                actions: <Widget>[
+                                                                                  InkWell(
+                                                                                    onTap: () async {
+                                                                                      await Clipboard.setData(ClipboardData(
+                                                                                              text: "Name : ${state.response[index]["mobile"]}\n"
+                                                                                                  "Address : ${state.response[index]["address"]}\n"
+                                                                                                  "Address : ${state.response[index]["address"]}\n"
+                                                                                                  "Mobile : ${state.response[index]["mobile"]}\n"
+                                                                                                  "Bank Name : ${state.response[index]["bank_name"]}\n"
+                                                                                                  "Account Name : ${state.response[index]["account_name"]}\n"
+                                                                                                  "Account Number : ${state.response[index]["account_number"]}\n"
+                                                                                                  "IFSC : ${state.response[index]["ifsc"]}\n"))
+                                                                                          .then((value) {
+                                                                                        EasyLoading.showToast("Copied");
+                                                                                      });
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                    child: CustomButton(backColor: c_black, text: "Copy", c_color: c_white, fontWeight: FontWeight.w400, fontSize: 17),
+                                                                                  ),
+                                                                                ],
+                                                                              );
+                                                                            },
+                                                                          );
+                                                                          BeneUpdateAPI
+                                                                              api =
+                                                                              BeneUpdateAPI();
+                                                                          await api.BeneUpdateUser(
+                                                                              "${state.response[index]['id'].toString()}");
+                                                                        },
+                                                                        child: TextWidget(text: "Donate", t_color: c_white, fontWeight: FontWeight.w600, fontSize: getProportionateScreenWidth(4))),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
                                                   ],
                                                 ),
-
                                               ),
                                             ),
                                           ),
@@ -925,7 +927,6 @@ class _DonatePageState extends State<DonatePage> {
                       )),
                     ],
                   );
-                  
                 }
                 if (state is SeeModeError) {
                   return Container();
@@ -973,11 +974,11 @@ class _DonatePageState extends State<DonatePage> {
                   BlocProvider.of<SeeModeCubit>(context).getSeeMore();
                 },
                 child: CustomButton(
-                    backColor: c_black,
+                    backColor: c_black.withOpacity(0.5),
                     text: "See More",
                     c_color: c_white,
                     fontWeight: FontWeight.w400,
-                    fontSize: _isHover == true ? 19 : 17)),
+                    fontSize: _isHover == true ? 16 : 15)),
           ),
           Space(
             height: 20,
@@ -1001,7 +1002,7 @@ class _DonatePageState extends State<DonatePage> {
                 text: "Beneficiaries List",
                 t_color: c_black,
                 fontWeight: FontWeight.w400,
-                fontSize: 23),
+                fontSize: MediaQuery.of(context).size.width >= 1500 ? 23 : 20),
             Space(
               height: 20,
             ),
@@ -1029,7 +1030,7 @@ class _DonatePageState extends State<DonatePage> {
                               curve: Curves.fastLinearToSlowEaseIn,
                               duration: Duration(milliseconds: 2500),
                               child: Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
+                                padding: EdgeInsets.only(bottom: 8.0),
                                 child: Container(
                                   width: double.infinity,
                                   //  height: MediaQuery.of(context).size.width / 25,
@@ -1050,36 +1051,51 @@ class _DonatePageState extends State<DonatePage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              TextWidget(
-                                                  text:
-                                                      "Name : ${_posts[index]['name'].toString()}",
-                                                  t_color: c_black,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize:
-                                                      getProportionateScreenWidth(
-                                                          3)),
+                                              SizedBox(
+                                                width:
+                                                    getProportionateScreenWidth(
+                                                        150),
+                                                child: TextWidget(
+                                                    text:
+                                                        "Name : ${_posts[index]['name'].toString()}",
+                                                    t_color: c_black,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize:
+                                                        getProportionateScreenWidth(
+                                                            3)),
+                                              ),
                                               Space(
                                                 height: 10,
                                               ),
-                                              TextWidget(
-                                                  text:
-                                                      "Phone : ${_posts[index]['mobile'].toString()}",
-                                                  t_color: c_black,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize:
-                                                      getProportionateScreenWidth(
-                                                          3)),
-                                              Space(
-                                                height: 10,
-                                              ),
-                                              TextWidget(
-                                                  text:
-                                                      "Address : ${_posts[index]['address'].toString()}",
-                                                  t_color: c_black,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize:
-                                                      getProportionateScreenWidth(
-                                                          3))
+                                              // SizedBox(
+                                              //   width:
+                                              //       getProportionateScreenWidth(
+                                              //           150),
+                                              //   child: TextWidget(
+                                              //       text:
+                                              //           "Phone : ${_posts[index]['mobile'].toString()}",
+                                              //       t_color: c_black,
+                                              //       fontWeight: FontWeight.w500,
+                                              //       fontSize:
+                                              //           getProportionateScreenWidth(
+                                              //               3)),
+                                              // ),
+                                              // Space(
+                                              //   height: 10,
+                                              // ),
+                                              SizedBox(
+                                                width:
+                                                    getProportionateScreenWidth(
+                                                        150),
+                                                child: TextWidget(
+                                                    text:
+                                                        "Address : ${_posts[index]['address'].toString()}",
+                                                    t_color: c_black,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize:
+                                                        getProportionateScreenWidth(
+                                                            3)),
+                                              )
                                             ],
                                           ),
                                         ),
@@ -1151,11 +1167,11 @@ class _DonatePageState extends State<DonatePage> {
                     //BlocProvider.of<DashboardCubit>(context).refreshDashboard();
                   },
                   child: CustomButton(
-                      backColor: c_black,
+                      backColor: c_black.withOpacity(0.5),
                       text: "Donate",
                       c_color: c_white,
                       fontWeight: FontWeight.w400,
-                      fontSize: _isHover == true ? 19 : 17)),
+                      fontSize: _isHover == true ? 16 : 15)),
             ),
             Space(
               height: 20,
@@ -1178,7 +1194,7 @@ class _DonatePageState extends State<DonatePage> {
                 text: "Login",
                 t_color: c_black,
                 fontWeight: FontWeight.w400,
-                fontSize: 20),
+                fontSize: MediaQuery.of(context).size.width >= 1500 ? 20 : 17),
             InkWell(
               onTap: () {
                 BlocProvider.of<StatusCubit>(context).setCreateAccount();
@@ -1187,7 +1203,8 @@ class _DonatePageState extends State<DonatePage> {
                   text: "Create Account",
                   t_color: c_black,
                   fontWeight: FontWeight.w700,
-                  fontSize: 15),
+                  fontSize:
+                      MediaQuery.of(context).size.width >= 1500 ? 15 : 13),
             ),
           ],
         ),
@@ -1205,7 +1222,9 @@ class _DonatePageState extends State<DonatePage> {
                           height: 1,
                           color: c_black,
                           fontWeight: FontWeight.w400,
-                          fontSize: 18)
+                          fontSize: MediaQuery.of(context).size.width >= 1500
+                              ? 18
+                              : 12)
                       .copyWith(),
                   border: OutlineInputBorder()),
             ),
@@ -1223,7 +1242,9 @@ class _DonatePageState extends State<DonatePage> {
                           height: 1,
                           color: c_black,
                           fontWeight: FontWeight.w400,
-                          fontSize: 18)
+                          fontSize: MediaQuery.of(context).size.width >= 1500
+                              ? 18
+                              : 12)
                       .copyWith(),
                   border: OutlineInputBorder()),
             ),
@@ -1258,7 +1279,8 @@ class _DonatePageState extends State<DonatePage> {
                         .login(loginEmail.text, loginPassword.text, context)
                         .then((value) {
                       if (value) {
-                        BlocProvider.of<StatusCubit>(context).setBenificiaries();
+                        BlocProvider.of<StatusCubit>(context)
+                            .setBenificiaries();
                         loginEmail.clear();
                         loginPassword.clear();
                       } else {
@@ -1271,11 +1293,11 @@ class _DonatePageState extends State<DonatePage> {
                 }
               },
               child: CustomButton(
-                  backColor: c_black,
+                  backColor: c_black.withOpacity(0.5),
                   text: "Login",
                   c_color: c_white,
                   fontWeight: FontWeight.w400,
-                  fontSize: _isHover == true ? 19 : 17)),
+                  fontSize: _isHover == true ? 17 : 15)),
         ),
       ],
     );
@@ -1290,7 +1312,6 @@ class _DonatePageState extends State<DonatePage> {
           children: [
             Row(
               children: [
-
                 TextWidget(
                     text: "Create Account",
                     t_color: c_black,
@@ -1456,7 +1477,7 @@ class _DonatePageState extends State<DonatePage> {
                     }
                   },
                   child: CustomButton(
-                      backColor: c_black,
+                      backColor: c_black.withOpacity(0.5),
                       text: "Create",
                       c_color: c_white,
                       fontWeight: FontWeight.w400,
@@ -1900,7 +1921,7 @@ class _DonatePageState extends State<DonatePage> {
             fontWeight: FontWeight.w700,
             fontSize: 15),
       ),
-      
+
       // content: TextWidget(text: message, t_color: c_black, fontWeight: FontWeight.w700, fontSize: 15),
       actions: [cancelButton, continueButton],
     );
