@@ -132,7 +132,7 @@ class MyDrawer extends StatelessWidget {
                                   return ListTile(
                                     title: TextWidget(
                                         text: state.loginStatus
-                                            ? "Logout"
+                                            ? "Account"
                                             : "Login",
                                         t_color: c_black_opa,
                                         fontWeight: FontWeight.w400,
@@ -140,11 +140,11 @@ class MyDrawer extends StatelessWidget {
                                     onTap: () async {
                                       if (state.loginStatus) {
                                         Navigator.pop(context);
-                                        await Store.clear(context);
-                                        BlocProvider.of<LoginstatusCubit>(
-                                            context).setLogout();
+                                        // await Store.clear(context);
+                                        // BlocProvider.of<LoginstatusCubit>(
+                                        //     context).setLogout();
                                         BlocProvider.of<StatusCubit>(
-                                            context).setLogin();
+                                            context).setProfile();
                                         // showAlertDialogLogout(context);
                                       } else {
                                         BlocProvider.of<StatusCubit>(context)

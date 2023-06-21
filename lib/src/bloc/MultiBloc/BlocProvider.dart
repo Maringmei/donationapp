@@ -5,12 +5,13 @@ import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
 import 'package:donationapp/src/bloc/PayNowBloc/pay_now_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../BeneficiariesBLoc/beneficiaries_cubit.dart';
 import '../ConfirmBloc/confirm_cubit.dart';
 import '../HistoryBloc/history_cubit.dart';
+import '../ProfileBloc/profile_cubit.dart';
 import '../SeeMoreBloc/see_mode_cubit.dart';
 import '../StatusBloc/status_cubit.dart';
+import '../UpdateProfileBloc/update_profile_cubit.dart';
 
 class MultiBloc extends StatelessWidget {
   final widgets;
@@ -48,7 +49,14 @@ class MultiBloc extends StatelessWidget {
       ),
       BlocProvider(
         create: (context) => SeeModeCubit(),
-      )
+      ),
+      BlocProvider(
+        create: (context) => ProfileCubit(),
+      ),
+      BlocProvider(
+        create: (context) => UpdateProfileCubit(),
+      ),
+
     ], child: widgets);
   }
 }

@@ -172,6 +172,13 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
   TextEditingController createAddress = TextEditingController();
   TextEditingController createPassword = TextEditingController();
 
+  //profile
+  TextEditingController profileName = TextEditingController();
+  TextEditingController profileEmail = TextEditingController();
+  TextEditingController profileMobileNumber = TextEditingController();
+  TextEditingController profileAddress = TextEditingController();
+  TextEditingController profilePassword = TextEditingController();
+
   String? token;
   void getToken() async {
     token = await Store.getToken();
@@ -276,8 +283,8 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                 children: [
                                   if (state.status == 0)
                                     DonateNow(context),
-                                  if (state.status == 1) createAccount(context),
-                                  if (state.status == 2) login(context),
+                                  if (state.status == 1) CreateAccount(context),
+                                  if (state.status == 2) Login(context),
                                   if (state.status == 3)
                                     BeneficiariesList(context),
                                 ],
@@ -360,20 +367,20 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                 getProportionateScreenWidth(
                                                     14)),
                                           ),
-                                          Space(
-                                            height: 10,
-                                          ),
-                                          SizedBox(
-                                            width: getProportionateScreenWidth(300),
-                                            child: TextWidget(
-                                                text:
-                                                "Phone : ${_posts[index]['mobile'].toString()}",
-                                                t_color: c_black,
-                                                fontWeight: FontWeight.w500,
-                                                fontSize:
-                                                getProportionateScreenWidth(
-                                                    14)),
-                                          ),
+                                          // Space(
+                                          //   height: 10,
+                                          // ),
+                                          // SizedBox(
+                                          //   width: getProportionateScreenWidth(300),
+                                          //   child: TextWidget(
+                                          //       text:
+                                          //       "Phone : ${_posts[index]['mobile'].toString()}",
+                                          //       t_color: c_black,
+                                          //       fontWeight: FontWeight.w500,
+                                          //       fontSize:
+                                          //       getProportionateScreenWidth(
+                                          //           14)),
+                                          // ),
                                           Space(
                                             height: 10,
                                           ),
@@ -452,15 +459,19 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextWidget(
-              text: "Donate",
-              t_color: c_black,
-              fontWeight: FontWeight.w400,
-              fontSize: 23),
+          Expanded(
+            flex: 1,
+            child: TextWidget(
+                text: "Donate",
+                t_color: c_black,
+                fontWeight: FontWeight.w400,
+                fontSize: 23),
+          ),
           Space(
             height: 20,
           ),
           Expanded(
+            flex: 10,
             child: BlocBuilder<SeeModeCubit, SeeModeState>(
               builder: (context, state) {
                 if (state is SeeModeInitial) {
@@ -590,169 +601,182 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                                 child: SizedBox(
                                                               width: getProportionateScreenWidth(85),
                                                               child:
-                                                              ElevatedButton(
-                                                                  style: ElevatedButton
-                                                                      .styleFrom(
-                                                                    foregroundColor:
-                                                                    Colors.white,
-                                                                    backgroundColor:
-                                                                    Colors.black.withOpacity(0.5),
-                                                                  ),
-                                                                  onPressed: () async{
-                                                                    showDialog<void>(
-                                                                      barrierDismissible:
-                                                                      false,
-                                                                      context: context,
-                                                                      builder:
-                                                                          (BuildContext
-                                                                      context) {
-                                                                        return AlertDialog(
-                                                                          title: TextWidget(
-                                                                              text:
-                                                                              "User Bank Details",
-                                                                              t_color:
-                                                                              c_black,
-                                                                              fontWeight:
-                                                                              FontWeight
-                                                                                  .w700,
-                                                                              fontSize:
-                                                                              20),
-                                                                          content:
-                                                                          Container(
-                                                                            width: 600,
-                                                                            child: Column(
-                                                                              crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                              mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                              children: [
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Name : ${state.response[index]["name"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Address : ${state.response[index]["address"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Mobile : ${state.response[index]["mobile"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Bank Name : ${state.response[index]["bank_name"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Account Name : ${state.response[index]["account_name"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "Account Number : ${state.response[index]["account_number"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: getProportionateScreenWidth(200),
-                                                                                  child: TextWidget(
-                                                                                      text: "IFSC : ${state.response[index]["ifsc"]}",
-                                                                                      t_color: c_black,
-                                                                                      fontWeight: FontWeight.w700,
-                                                                                      fontSize: 14),
-                                                                                ),
-                                                                                Space(
-                                                                                  height:
-                                                                                  5,
-                                                                                ),
-                                                                              ],
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                                                                child: ElevatedButton(
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      foregroundColor:
+                                                                      Colors.white,
+                                                                      backgroundColor:
+                                                                      Colors.black.withOpacity(0.5),
+                                                                    ),
+                                                                    onPressed: () async{
+                                                                      showDialog<void>(
+                                                                        barrierDismissible:
+                                                                        false,
+                                                                        context: context,
+                                                                        builder:
+                                                                            (BuildContext
+                                                                        context) {
+                                                                          return AlertDialog(
+                                                                            title: TextWidget(
+                                                                                text:
+                                                                                "User Bank Details",
+                                                                                t_color:
+                                                                                c_black,
+                                                                                fontWeight:
+                                                                                FontWeight
+                                                                                    .w700,
+                                                                                fontSize:
+                                                                                20),
+                                                                            content:
+                                                                            Container(
+                                                                              width: 600,
+                                                                              child: Column(
+                                                                                crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                                mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                                children: [
+                                                                                  SizedBox(
+                                                                                    width: getProportionateScreenWidth(250),
+                                                                                    child: TextWidget(
+                                                                                        text: "Name : ${state.response[index]["name"]}",
+                                                                                        t_color: c_black,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontSize: 13),
+                                                                                  ),
+                                                                                  Space(
+                                                                                    height:
+                                                                                    5,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: getProportionateScreenWidth(250),
+                                                                                    child: TextWidget(
+                                                                                        text: "Address : ${state.response[index]["address"]}",
+                                                                                        t_color: c_black,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontSize: 13),
+                                                                                  ),
+                                                                                  Space(
+                                                                                    height:
+                                                                                    5,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: getProportionateScreenWidth(250),
+                                                                                    child: TextWidget(
+                                                                                        text: "Mobile : ${state.response[index]["mobile"]}",
+                                                                                        t_color: c_black,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontSize: 13),
+                                                                                  ),
+                                                                                  Space(
+                                                                                    height:
+                                                                                    5,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: getProportionateScreenWidth(250),
+                                                                                    child: TextWidget(
+                                                                                        text: "Bank Name : ${state.response[index]["bank_name"]}",
+                                                                                        t_color: c_black,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontSize: 13),
+                                                                                  ),
+                                                                                  Space(
+                                                                                    height:
+                                                                                    5,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: getProportionateScreenWidth(250),
+                                                                                    child: TextWidget(
+                                                                                        text: "Account Name : ${state.response[index]["account_name"]}",
+                                                                                        t_color: c_black,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontSize: 13),
+                                                                                  ),
+                                                                                  Space(
+                                                                                    height:
+                                                                                    5,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: getProportionateScreenWidth(250),
+                                                                                    child: TextWidget(
+                                                                                        text: "Account No. : ${state.response[index]["account_number"]}",
+                                                                                        t_color: c_black,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontSize: 13),
+                                                                                  ),
+                                                                                  Space(
+                                                                                    height:
+                                                                                    5,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: getProportionateScreenWidth(250),
+                                                                                    child: TextWidget(
+                                                                                        text: "IFSC : ${state.response[index]["ifsc"]}",
+                                                                                        t_color: c_black,
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                        fontSize: 13),
+                                                                                  ),
+                                                                                  Space(
+                                                                                    height:
+                                                                                    5,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
                                                                             ),
-                                                                          ),
-                                                                          actions: <Widget>[
-                                                                            InkWell(
-                                                                              onTap: () async{
-                                                                                await Clipboard.setData(ClipboardData(text:
-                                                                                "Name : ${state.response[index]["mobile"]}\n"
-                                                                                    "Address : ${state.response[index]["address"]}\n"
-                                                                                    "Address : ${state.response[index]["address"]}\n"
-                                                                                    "Mobile : ${state.response[index]["mobile"]}\n"
-                                                                                    "Bank Name : ${state.response[index]["bank_name"]}\n"
-                                                                                    "Account Name : ${state.response[index]["account_name"]}\n"
-                                                                                    "Account Number : ${state.response[index]["account_number"]}\n"
-                                                                                    "IFSC : ${state.response[index]["ifsc"]}\n"
-                                                                                )
-                                                                                ).then((value) {
-                                                                                  EasyLoading.showToast("Copied");
-                                                                                });
-                                                                                Navigator.pop(
-                                                                                    context);
-                                                                              },
-                                                                              child:CustomButton(
-                                                                                  backColor:
-                                                                                  c_black.withOpacity(0.5),
-                                                                                  text:
-                                                                                  "Copy",
-                                                                                  c_color:
-                                                                                  c_white,
-                                                                                  fontWeight:
-                                                                                  FontWeight
-                                                                                      .w400,
-                                                                                  fontSize:
-                                                                                  17),
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                    BeneUpdateAPI api = BeneUpdateAPI();
-                                                                    await api.BeneUpdateUser("${state.response[index]['id'].toString()}");
-                                                                  },
-                                                                  child: TextWidget(text: "Donate", t_color: c_white, fontWeight: FontWeight.w500, fontSize: getProportionateScreenWidth(9.5))),
+                                                                            actions: <Widget>[
+                                                                              InkWell(
+                                                                                onTap: () async{
+                                                                                  await Clipboard.setData(ClipboardData(text:
+                                                                                  "Name : ${state.response[index]["mobile"]}\n"
+                                                                                      "Address : ${state.response[index]["address"]}\n"
+                                                                                      "Address : ${state.response[index]["address"]}\n"
+                                                                                      "Mobile : ${state.response[index]["mobile"]}\n"
+                                                                                      "Bank Name : ${state.response[index]["bank_name"]}\n"
+                                                                                      "Account Name : ${state.response[index]["account_name"]}\n"
+                                                                                      "Account Number : ${state.response[index]["account_number"]}\n"
+                                                                                      "IFSC : ${state.response[index]["ifsc"]}\n"
+                                                                                  )
+                                                                                  ).then((value) {
+                                                                                    EasyLoading.showToast("Copied");
+                                                                                  });
+                                                                                  Navigator.pop(
+                                                                                      context);
+                                                                                },
+                                                                                child:CustomButton(
+                                                                                    backColor:
+                                                                                    c_black.withOpacity(0.5),
+                                                                                    text:
+                                                                                    "Copy",
+                                                                                    c_color:
+                                                                                    c_white,
+                                                                                    fontWeight:
+                                                                                    FontWeight
+                                                                                        .w400,
+                                                                                    fontSize:
+                                                                                    17),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      );
+                                                                      BeneUpdateAPI api = BeneUpdateAPI();
+                                                                      await api.BeneUpdateUser("${state.response[index]['id'].toString()}");
+                                                                    },
+                                                                    child: MediaQuery.of(context).size.width <= 370 ? Column(
+                                                                      children: [
+                                                                       // Icon(Icons.volunteer_activism_rounded,size: 12,),
+                                                                    TextWidget(text: "Donate", t_color: c_white, fontWeight: FontWeight.w500, fontSize: getProportionateScreenWidth(8))
+                                                                      ],
+                                                                    ) : Column(
+                                                                      children: [
+                                                                        //Icon(Icons.volunteer_activism_rounded,size: 13,),
+                                                                        TextWidget(text: "Donate", t_color: c_white, fontWeight: FontWeight.w500, fontSize: getProportionateScreenWidth(8.5)),
+                                                                      ],
+                                                                    )),
+                                                              ),
                                                             ) )
 
 
@@ -800,20 +824,23 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
           Space(
             height: 20,
           ),
-          MouseRegion(
+          Expanded(
+            flex: 1,
+            child: MouseRegion(
 
-            child: InkWell(
-                onTap: () async {
-                  // BlocProvider.of<StatusCubit>(context).setDonate();
-                  // BlocProvider.of<DashboardCubit>(context).refreshDashboard();
-                  BlocProvider.of<SeeModeCubit>(context).getSeeMore();
-                },
-                child: CustomButton(
-                    backColor: c_black.withOpacity(0.5),
-                    text: "See More",
-                    c_color: c_white,
-                    fontWeight: FontWeight.w400,
-                    fontSize:  17)),
+              child: InkWell(
+                  onTap: () async {
+                    // BlocProvider.of<StatusCubit>(context).setDonate();
+                    // BlocProvider.of<DashboardCubit>(context).refreshDashboard();
+                    BlocProvider.of<SeeModeCubit>(context).getSeeMore();
+                  },
+                  child: CustomButton(
+                      backColor: c_black.withOpacity(0.5),
+                      text: "See More",
+                      c_color: c_white,
+                      fontWeight: FontWeight.w400,
+                      fontSize:  17)),
+            ),
           ),
           Space(
             height: 20,
@@ -823,7 +850,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
     );
   }
 
-  Column login(BuildContext context) {
+  Column Login(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -927,7 +954,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
     );
   }
 
-  Column createAccount(BuildContext context) {
+  Column CreateAccount(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1106,379 +1133,156 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
     );
   }
 
-  Column SelectDonationAmount(BuildContext context) {
+  Column Profile(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextWidget(
-            text: "Select Your Donation Amount",
-            t_color: c_black,
-            fontWeight: FontWeight.w400,
-            fontSize: 20),
-        Space(height: 30),
-        GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 3),
-          itemCount: amount.length,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            return MouseRegion(
-              // onHover: (event){
-              //   _clickindex = index;
-              //   setState(() {
-              //
-              //   });
-              //
-              // },
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                TextWidget(
+                    text: "Profile",
+                    t_color: c_black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18),
+              ],
+            ),
+          ],
+        ),
+        Space(height: 20),
+        Column(
+          children: [
+            TextFormField(
+              controller: profileName,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Name',
+                  hintStyle: GoogleFonts.inter(
+                          height: 1,
+                          color: c_black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18)
+                      .copyWith(),
+                  border: OutlineInputBorder()),
+            ),
+            Space(
+              height: 10,
+            ),
+            TextFormField(
+              controller: profileEmail,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Email',
+                  hintStyle: GoogleFonts.inter(
+                          height: 1,
+                          color: c_black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18)
+                      .copyWith(),
+                  border: OutlineInputBorder()),
+            ),
+            Space(
+              height: 10,
+            ),
+            TextFormField(
+              controller: profileMobileNumber,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Mobile Number',
+                  hintStyle: GoogleFonts.inter(
+                          height: 1,
+                          color: c_black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18)
+                      .copyWith(),
+                  border: OutlineInputBorder()),
+            ),
+            Space(
+              height: 10,
+            ),
+            TextFormField(
+              controller: profileAddress,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Address',
+                  hintStyle: GoogleFonts.inter(
+                          height: 1,
+                          color: c_black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18)
+                      .copyWith(),
+                  border: OutlineInputBorder()),
+            ),
 
+          ],
+        ),
+        Space(height: 20),
+        Column(
+          children: [
+            MouseRegion(
               child: InkWell(
-                onTap: () {
-                  _clickindex = index;
-                  donationAmount = int.parse(amount[index]["amount"]);
-                  customAmount.clear();
-                  setState(() {});
-                  print(donationAmount);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: _clickindex == index ? c_black : c_white,
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.black54,
-                          //blurRadius: 1.0,
-                          offset: Offset(4, 4))
-                    ],
-                    border: Border.all(
-                      color: c_black,
-                    ),
-                  ),
-                  child: Center(
-                      child: TextWidget(
-                          text: "₹ ${amount[index]["amount"]}/-",
-                          t_color: _clickindex == index ? c_white : c_black,
-                          fontWeight: FontWeight.w700,
-                          fontSize: getProportionateScreenWidth(15))),
-                ),
-              ),
-            );
-          },
+                  onTap: () {
+                    // EasyLoading.show(
+                    //     status: "Please wait...", dismissOnTap: false);
+                    // if (createName.text.isEmpty ||
+                    //     createEmail.text.isEmpty ||
+                    //     createMobileNumber.text.isEmpty ||
+                    //     createAddress.text.isEmpty ||
+                    //     createPassword.text.isEmpty) {
+                    //   EasyLoading.dismiss();
+                    //   EasyLoading.showToast("Please fill all the fields");
+                    // } else {
+                    //   if (isEmail(createEmail.text.toString())) {
+                    //     if (createPassword.text.length >= 8) {
+                    //       BlocProvider.of<CreateaccountCubit>(context)
+                    //           .createAccount(
+                    //               createName.text,
+                    //               createEmail.text,
+                    //               createMobileNumber.text,
+                    //               createAddress.text,
+                    //               createPassword.text)
+                    //           .then((value) {
+                    //         if (value) {
+                    //           BlocProvider.of<StatusCubit>(context).setLogin();
+                    //           createName.clear();
+                    //           createEmail.clear();
+                    //           createMobileNumber.clear();
+                    //           createAddress.clear();
+                    //           createPassword.clear();
+                    //         }
+                    //       });
+                    //     } else {
+                    //       EasyLoading.showToast(
+                    //           "Minimum password length should be 8");
+                    //     }
+                    //   } else {
+                    //     EasyLoading.dismiss();
+                    //     EasyLoading.showToast("Invalid Email");
+                    //   }
+                    // }
+                  },
+                  child: CustomButton(
+                      backColor: c_black.withOpacity(0.5),
+                      text: "Create",
+                      c_color: c_white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 17)),
+            ),
+            Space(
+              height: 10,
+            ),
+          ],
         ),
-        Space(
-          height: 30,
-        ),
-        InkWell(
-          onTap: () {
-            _clickindex = 9999;
-            donationAmount = 0;
-            setState(() {});
-          },
-          child: TextFormField(
-            enabled: _clickindex == 9999 ? true : false,
-            controller: customAmount,
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            onChanged: (value) {
-              donationAmount = int.parse(value.toString());
-            },
-            decoration: InputDecoration(
-                prefix: Text("₹"),
-                filled: true,
-                fillColor: Colors.white,
-                hintText: 'Enter custom amount',
-                hintStyle: GoogleFonts.inter(
-                        height: 1,
-                        color: c_black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18)
-                    .copyWith(),
-                border: OutlineInputBorder()),
-          ),
-        ),
-        Space(
-          height: 20,
-        ),
-        MouseRegion(
-          child: InkWell(onTap: () async {
-            if (donationAmount == 0) {
-              EasyLoading.showToast("Select Donation Amount.");
-            } else if (donationAmount < 5000) {
-              EasyLoading.showToast("Minimum Donation Amount is ₹5000/-");
-            } else if (donationAmount != 0 || donationAmount >= 5000) {
-              token = await Store.getToken();
-              if (token == null) {
-                BlocProvider.of<StatusCubit>(context).setCreateAccount();
-              } else {
-                //do something
-                BlocProvider.of<PayNowCubit>(context)
-                    .PayNow(donationAmount.toString())
-                    .then((value) {
-                  // EasyLoading.showToast(value.toString());
-
-                  Razorpay razorpay = Razorpay();
-
-                  var options = value;
-                  // var options = {
-                  //   //  'key': 'rzp_live_ILgsfZCZoFIKMb', //razor test
-                  //   'key': 'rzp_test_VdO7KK713OHMLX', //globizs test
-                  //   'amount': 100,
-                  //   'name': 'Acme Corp.',
-                  //   'description': 'Fine T-Shirt',
-                  //   'retry': {'enabled': true, 'max_count': 1},
-                  //   'send_sms_hash': true,
-                  //   'prefill': {
-                  //     'contact': '8888888888',
-                  //     'email': 'test@razorpay.com'
-                  //   },
-                  //   'external': {
-                  //     'wallets': ['paytm']
-                  //   }
-                  // };
-                  razorpay.on(
-                      Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
-                  razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-                      handlePaymentSuccessResponse);
-                  razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
-                      handleExternalWalletSelected);
-                  razorpay.open(options);
-                });
-              }
-            }
-          }, child: BlocBuilder<LoginstatusCubit, LoginstatusState>(
-            builder: (context, state) {
-              return CustomButton(
-                  backColor: c_black,
-                  text: state.loginStatus ? "PAY" : "NEXT",
-                  c_color: c_white,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 17);
-            },
-          )),
-        )
       ],
     );
-  }
-
-  void handlePaymentErrorResponse(PaymentFailureResponse response) {
-    /*
-    * PaymentFailureResponse contains three values:
-    * 1. Error Code
-    * 2. Error Description
-    * 3. Metadata
-    * */
-    showAlertDialog(
-        context,
-        "Payment Failed",
-        "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.toString()}",
-        "error");
-  }
-
-  void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
-    /*
-    * Payment Success Response contains three values:
-    * 1. Order ID
-    * 2. Payment ID
-    * 3. Signature
-    * */
-    print("Payment ID : ${response.paymentId}");
-    print("Order ID : ${response.orderId}");
-    print("Signature ID : ${response.signature}");
-
-    BlocProvider.of<ConfirmCubit>(context)
-        .confirmPayment("${response.paymentId}", "${response.orderId}",
-            "${response.signature}")
-        .then((value) {
-      if (value) {
-        // showAlertDialog(
-        //     context,
-        //     "Payment Successful",
-        //     "Payment ID: ${response.paymentId}\n\nOrder ID: ${response.orderId}",
-        //     "success");
-
-        BlocProvider.of<BeneficiariesCubit>(context)
-            .getBeneficiariesList("${response.paymentId}")
-            .then((value) {
-          if (value != false) {
-            EasyLoading.dismiss();
-            // print(value);
-            //print(value);
-            Map<String, dynamic> resJson = value;
-
-            print(resJson);
-
-
-            showDialog<void>(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: TextWidget(
-                      text: "Beneficiaries List",
-                      t_color: c_black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15),
-                  content: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 600,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 600,
-                                height:
-                                getProportionateScreenWidth(
-                                    200),
-                                child: ListView.builder(
-                                    itemCount: resJson["payment_details"].length,
-                                    itemBuilder:
-                                        (BuildContext
-                                    context,
-                                        int index) {
-                                      return Card(
-                                        child: ListTile(
-                                          title: Text(
-                                            "${resJson["payment_details"][index]["name"]}",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                color:
-                                                c_black,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w700,
-                                                fontSize:
-                                                15),
-                                          ),
-                                          trailing:
-                                          Text(
-                                            "${resJson["payment_details"][index]["amount"]}",
-                                            style: TextStyle(
-                                                color:
-                                                c_black,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w700,
-                                                fontSize:
-                                                15),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                              ),
-                              Space(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment
-                                    .end,
-                                crossAxisAlignment:
-                                CrossAxisAlignment
-                                    .center,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment
-                                        .end,
-                                    children: [
-                                      TextWidget(
-                                          text:
-                                          "Net Amount : ",
-                                          t_color:
-                                          c_black,
-                                          fontWeight:
-                                          FontWeight
-                                              .w600,
-                                          fontSize: 13),
-                                      TextWidget(
-                                          text:
-                                          "Tax : ",
-                                          t_color:
-                                          c_black,
-                                          fontWeight:
-                                          FontWeight
-                                              .w600,
-                                          fontSize: 13),
-                                      TextWidget(
-                                          text:
-                                          "Grand Amount : ",
-                                          t_color:
-                                          c_black,
-                                          fontWeight:
-                                          FontWeight
-                                              .w600,
-                                          fontSize: 13),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment
-                                        .end,
-                                    children: [
-                                      TextWidget(
-                                          text: "${resJson["net_amount"]}",
-                                          t_color:
-                                          c_black,
-                                          fontWeight:
-                                          FontWeight
-                                              .w600,
-                                          fontSize: 13),
-                                      TextWidget(
-                                          text: "${resJson["tax"]}",
-                                          t_color:
-                                          c_black,
-                                          fontWeight:
-                                          FontWeight
-                                              .w600,
-                                          fontSize: 13),
-                                      TextWidget(
-                                          text: "${resJson["grand_amount"]}",
-                                          t_color:
-                                          c_black,
-                                          fontWeight:
-                                          FontWeight
-                                              .w600,
-                                          fontSize: 13),
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: CustomButton(
-                          backColor: c_black,
-                          text: "Okay",
-                          c_color: c_white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 17),
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        });
-      }
-    });
-  }
-
-  void handleExternalWalletSelected(ExternalWalletResponse response) {
-    showAlertDialog(context, "External Wallet Selected",
-        "${response.walletName}", "external_account");
   }
 
   void showAlertDialog(

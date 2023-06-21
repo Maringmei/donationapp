@@ -22,6 +22,8 @@ abstract class ApiURL {
   static const seeMoreUrl = "/api/beneficiaries/getbeneficiary";
   static const beneficiariesUrl = "/api/beneficiaries?";
   static const beneUpdateUrl = "/api/beneficiaries/";
+  static const profileUrl = "/api/sites/profile";
+  static const updateprofileUrl = "/api/sites/updateprofile";
 
 
 

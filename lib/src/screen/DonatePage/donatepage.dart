@@ -7,9 +7,12 @@ import 'package:donationapp/src/bloc/HistoryBloc/history_cubit.dart';
 import 'package:donationapp/src/bloc/LoginBloc/login_cubit.dart';
 import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
 import 'package:donationapp/src/bloc/PayNowBloc/pay_now_cubit.dart';
+import 'package:donationapp/src/bloc/ProfileBloc/profile_cubit.dart';
 import 'package:donationapp/src/bloc/StatusBloc/status_cubit.dart';
+import 'package:donationapp/src/bloc/UpdateProfileBloc/update_profile_cubit.dart';
 import 'package:donationapp/src/constants/common_constant/icons_assets.dart';
 import 'package:donationapp/src/service/BeneUpdate/bene_update_api.dart';
+import 'package:donationapp/src/service/ProfileApi/profile_api.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,6 +33,7 @@ import '../../bloc/SeeMoreBloc/see_mode_cubit.dart';
 import '../../constants/common_constant/check_email.dart';
 import '../../constants/common_constant/color_constant.dart';
 import '../../constants/common_constant/currency_format.dart';
+import '../../constants/common_constant/font_style.dart';
 import '../../constants/payment/payment.dart';
 import '../../constants/widget_constant/custom_button.dart';
 import '../../constants/widget_constant/dialog_widget.dart';
@@ -132,6 +136,8 @@ class _DonatePageState extends State<DonatePage> {
   // The controller for the ListView
   late ScrollController _controller;
 
+  bool updateEnable = false;
+
   @override
   void initState() {
     super.initState();
@@ -155,6 +161,7 @@ class _DonatePageState extends State<DonatePage> {
   ];
 
   bool _isHover = false;
+  bool _isHoverLogout = false;
   int? _clickindex = 99999;
   int? _hoverindex = 99999;
   bool _checkBox = false;
@@ -175,11 +182,19 @@ class _DonatePageState extends State<DonatePage> {
   TextEditingController createAddress = TextEditingController();
   TextEditingController createPassword = TextEditingController();
 
+  //profile
+  TextEditingController profileName = TextEditingController();
+  TextEditingController profileEmail = TextEditingController();
+  TextEditingController profileMobileNumber = TextEditingController();
+  TextEditingController profileAddress = TextEditingController();
+  TextEditingController profilePassword = TextEditingController();
+
   bool _home = false;
   bool _about = false;
   bool _donate = false;
   bool _bene = false;
   bool _login = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -228,15 +243,11 @@ class _DonatePageState extends State<DonatePage> {
                                 MouseRegion(
                                   onEnter: (value) {
                                     _home = true;
-                                    setState(() {
-
-                                    });
+                                    setState(() {});
                                   },
                                   onExit: (value) {
                                     _home = false;
-                                    setState(() {
-
-                                    });
+                                    setState(() {});
                                   },
                                   child: InkWell(
                                     onTap: () {
@@ -248,9 +259,14 @@ class _DonatePageState extends State<DonatePage> {
                                     },
                                     child: TextWidget(
                                         text: "Home",
-                                        t_color: _home == true ? c_gold : c_white,
+                                        t_color:
+                                            _home == true ? c_gold : c_white,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                        fontSize:
+                                            MediaQuery.of(context).size.width >=
+                                                    1500
+                                                ? 15
+                                                : 12),
                                   ),
                                 ),
                                 Space(
@@ -259,23 +275,24 @@ class _DonatePageState extends State<DonatePage> {
                                 MouseRegion(
                                   onEnter: (value) {
                                     _about = true;
-                                    setState(() {
-
-                                    });
+                                    setState(() {});
                                   },
                                   onExit: (value) {
                                     _about = false;
-                                    setState(() {
-
-                                    });
+                                    setState(() {});
                                   },
                                   child: InkWell(
                                     onTap: () {},
                                     child: TextWidget(
                                         text: "About",
-                                        t_color: _about == true ? c_gold : c_white,
+                                        t_color:
+                                            _about == true ? c_gold : c_white,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                        fontSize:
+                                            MediaQuery.of(context).size.width >=
+                                                    1500
+                                                ? 15
+                                                : 12),
                                   ),
                                 ),
                                 Space(
@@ -286,31 +303,36 @@ class _DonatePageState extends State<DonatePage> {
                                     return MouseRegion(
                                       onEnter: (value) {
                                         _donate = true;
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       },
                                       onExit: (value) {
                                         _donate = false;
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       },
                                       child: InkWell(
                                         onTap: () {
                                           if (state.loginStatus) {
-                                            BlocProvider.of<StatusCubit>(context)
+                                            BlocProvider.of<StatusCubit>(
+                                                    context)
                                                 .setDonate();
                                           } else {
-                                            BlocProvider.of<StatusCubit>(context)
+                                            BlocProvider.of<StatusCubit>(
+                                                    context)
                                                 .setLogin();
                                           }
                                         },
                                         child: TextWidget(
                                             text: "Donate",
-                                            t_color: _donate == true ? c_gold : c_white,
+                                            t_color: _donate == true
+                                                ? c_gold
+                                                : c_white,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                            fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width >=
+                                                    1500
+                                                ? 15
+                                                : 12),
                                       ),
                                     );
                                   },
@@ -323,33 +345,38 @@ class _DonatePageState extends State<DonatePage> {
                                     return MouseRegion(
                                       onEnter: (value) {
                                         _bene = true;
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       },
                                       onExit: (value) {
                                         _bene = false;
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       },
                                       child: InkWell(
                                         onTap: () {
                                           if (state.loginStatus) {
-                                            BlocProvider.of<StatusCubit>(context)
+                                            BlocProvider.of<StatusCubit>(
+                                                    context)
                                                 .setBenificiaries();
                                             // BlocProvider.of<HistoryCubit>(context)
                                             //     .refreshHistory();
                                           } else {
-                                            BlocProvider.of<StatusCubit>(context)
+                                            BlocProvider.of<StatusCubit>(
+                                                    context)
                                                 .setLogin();
                                           }
                                         },
                                         child: TextWidget(
                                             text: "Benefiaciaries",
-                                            t_color: _bene == true ? c_gold : c_white,
+                                            t_color: _bene == true
+                                                ? c_gold
+                                                : c_white,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                            fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width >=
+                                                    1500
+                                                ? 15
+                                                : 12),
                                       ),
                                     );
                                   },
@@ -362,32 +389,53 @@ class _DonatePageState extends State<DonatePage> {
                                     return MouseRegion(
                                       onEnter: (value) {
                                         _login = true;
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       },
                                       onExit: (value) {
                                         _login = false;
-                                        setState(() {
-
-                                        });
+                                        setState(() {});
                                       },
                                       child: InkWell(
                                         onTap: () {
+                                          // profileName.text = "Maringmei";
                                           if (state.loginStatus) {
-                                            showAlertDialogLogout(context);
+                                            // showAlertDialogLogout(context);
+                                            BlocProvider.of<ProfileCubit>(
+                                                    context)
+                                                .getProfileData()
+                                                .then((value) {
+                                              if (value != false) {
+                                                //profile
+                                                 profileName.text = value["name"];
+                                                 profileAddress.text =  value["address"];
+                                                 profileEmail.text = value["email"];
+                                                 profileMobileNumber.text = value["mobile"];
+
+                                                BlocProvider.of<StatusCubit>(
+                                                        context)
+                                                    .setProfile();
+                                              }
+                                            });
                                           } else {
-                                            BlocProvider.of<StatusCubit>(context)
+                                            BlocProvider.of<StatusCubit>(
+                                                    context)
                                                 .setLogin();
                                           }
                                         },
                                         child: TextWidget(
                                             text: state.loginStatus
-                                                ? "Logout"
+                                                ? "Account"
                                                 : "Login",
-                                            t_color: _login == true ? c_gold : c_white,
+                                            t_color: _login == true
+                                                ? c_gold
+                                                : c_white,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: MediaQuery.of(context).size.width >= 1500 ? 15 : 12),
+                                            fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width >=
+                                                    1500
+                                                ? 15
+                                                : 12),
                                       ),
                                     );
                                   },
@@ -436,10 +484,12 @@ class _DonatePageState extends State<DonatePage> {
                                           if (state.status == 0)
                                             DonateNow(context),
                                           if (state.status == 1)
-                                            createAccount(context),
-                                          if (state.status == 2) login(context),
+                                            CreateAccount(context),
+                                          if (state.status == 2) Login(context),
                                           if (state.status == 3)
                                             BeneficiariesList(context),
+                                          if (state.status == 4)
+                                            Profile(context)
                                         ],
                                       );
                                     },
@@ -603,8 +653,9 @@ class _DonatePageState extends State<DonatePage> {
                                                                         style: ElevatedButton.styleFrom(
                                                                           foregroundColor:
                                                                               Colors.white,
-                                                                          backgroundColor:
-                                                                              Colors.black.withOpacity(0.5),
+                                                                          backgroundColor: Colors
+                                                                              .black
+                                                                              .withOpacity(0.5),
                                                                         ),
                                                                         onPressed: () async {
                                                                           showDialog<
@@ -805,8 +856,9 @@ class _DonatePageState extends State<DonatePage> {
                                                                         style: ElevatedButton.styleFrom(
                                                                           foregroundColor:
                                                                               Colors.white,
-                                                                          backgroundColor:
-                                                                              Colors.black.withOpacity(0.5),
+                                                                          backgroundColor: Colors
+                                                                              .black
+                                                                              .withOpacity(0.5),
                                                                         ),
                                                                         onPressed: () async {
                                                                           showDialog<
@@ -1183,7 +1235,7 @@ class _DonatePageState extends State<DonatePage> {
     return Expanded(child: Container());
   }
 
-  Column login(BuildContext context) {
+  Column Login(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1303,7 +1355,7 @@ class _DonatePageState extends State<DonatePage> {
     );
   }
 
-  Column createAccount(BuildContext context) {
+  Column CreateAccount(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1492,178 +1544,224 @@ class _DonatePageState extends State<DonatePage> {
     );
   }
 
-  Column SelectDonationAmount(BuildContext context) {
+  Column Profile(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextWidget(
-            text: "Select Your Donation Amount",
-            t_color: c_black,
-            fontWeight: FontWeight.w400,
-            fontSize: getProportionateScreenWidth(4)),
-        Space(height: 30),
-        GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 3),
-          itemCount: amount.length,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            return MouseRegion(
-              // onHover: (event){
-              //   _clickindex = index;
-              //   setState(() {
-              //
-              //   });
-              //
-              // },
-              onExit: (event) {
-                _hoverindex = 9999;
-                setState(() {});
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                TextWidget(
+                    text: "Profile",
+                    t_color: c_black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18),
+              ],
+            ),
+            // InkWell(
+            //   onTap: () {
+            //     BlocProvider.of<StatusCubit>(context).setLogin();
+            //   },
+            //   child: TextWidget(
+            //       text: "Login Instead",
+            //       t_color: c_black,
+            //       fontWeight: FontWeight.w700,
+            //       fontSize: 15),
+            // ),
+          ],
+        ),
+        Space(height: 20),
+        Column(
+          children: [
+            TextFormField(
+              controller: profileName,
+              style: custom_font(c_black,FontWeight.w500,15),
+
+              decoration: InputDecoration(
+                  enabled: updateEnable,
+                label: TextWidget(text: "Name", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 15),
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Name',
+                  hintStyle: GoogleFonts.inter(
+                          height: 1,
+                          color: c_black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18)
+                      .copyWith(),
+                  border: OutlineInputBorder()),
+            ),
+            Space(
+              height: 10,
+            ),
+            TextFormField(
+              controller: profileEmail,
+              style: custom_font(c_black,FontWeight.w500,15),
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                  enabled: false,
+                  label: TextWidget(text: "Email", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 15),
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Email',
+                  hintStyle: GoogleFonts.inter(
+                          height: 1,
+                          color: c_black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18)
+                      .copyWith(),
+                  border: OutlineInputBorder()),
+            ),
+            Space(
+              height: 10,
+            ),
+            TextFormField(
+              controller: profileMobileNumber,
+              style: custom_font(c_black,FontWeight.w500,15),
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                  enabled: updateEnable,
+                  label: TextWidget(text: "Mobile Number", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 15),
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Mobile Number',
+                  hintStyle: GoogleFonts.inter(
+                          height: 1,
+                          color: c_black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18)
+                      .copyWith(),
+                  border: OutlineInputBorder()),
+            ),
+            Space(
+              height: 10,
+            ),
+            TextFormField(
+              controller: profileAddress,
+              style: custom_font(c_black,FontWeight.w500,15),
+              decoration: InputDecoration(
+                  enabled: updateEnable,
+                  label: TextWidget(text: "Address", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 15),
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: 'Address',
+                  hintStyle: GoogleFonts.inter(
+                          height: 1,
+                          color: c_black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18)
+                      .copyWith(),
+                  border: OutlineInputBorder()),
+            ),
+          ],
+        ),
+        Space(height: 20),
+        Column(
+          children: [
+            MouseRegion(
+              onHover: (event) {
+                setState(() {
+                  _isHover = true;
+                });
               },
-              onEnter: (event) {
-                _hoverindex = index;
-                setState(() {});
-                print(_hoverindex);
+              onExit: (event) {
+                setState(() {
+                  _isHover = false;
+                });
               },
               child: InkWell(
-                onTap: () {
-                  _clickindex = index;
-                  donationAmount = int.parse(amount[index]["amount"]);
-                  customAmount.clear();
-                  setState(() {});
-                  print(donationAmount);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: _clickindex == index ? c_black : c_white,
-                    border: Border.all(
-                      color: _hoverindex == index ? c_grey : c_black,
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.black54,
-                          //blurRadius: 1.0,
-                          offset: Offset(4, 4))
-                    ],
-                  ),
-                  child: Center(
-                      child: TextWidget(
-                          text: "₹ ${amount[index]["amount"]}/-",
-                          t_color: _clickindex == index ? c_white : c_black,
-                          fontWeight: FontWeight.w700,
-                          fontSize: getProportionateScreenWidth(
-                              _hoverindex == index ? 4 : 3))),
-                ),
-              ),
-            );
-          },
-        ),
-        Space(
-          height: 30,
-        ),
-        InkWell(
-          onTap: () {
-            _clickindex = 9999;
-            donationAmount = 0;
-            setState(() {});
-          },
-          child: TextFormField(
-            enabled: _clickindex == 9999 ? true : false,
-            controller: customAmount,
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            onChanged: (value) {
-              donationAmount = int.parse(value.toString());
-            },
-            decoration: InputDecoration(
-                prefix: Text("₹"),
-                filled: true,
-                fillColor: Colors.white,
-                hintText: 'Enter custom amount',
-                hintStyle: GoogleFonts.inter(
-                        height: 1,
-                        color: c_black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: getProportionateScreenWidth(4))
-                    .copyWith(),
-                border: OutlineInputBorder()),
-          ),
-        ),
-        Space(
-          height: 20,
-        ),
-        MouseRegion(
-          onHover: (event) {
-            setState(() {
-              _isHover = true;
-            });
-          },
-          onExit: (event) {
-            setState(() {
-              _isHover = false;
-            });
-          },
-          child: InkWell(onTap: () async {
-            if (donationAmount == 0) {
-              EasyLoading.showToast("Select Donation Amount.");
-            } else if (donationAmount < 5000) {
-              EasyLoading.showToast("Minimum Donation Amount is ₹5000/-");
-            } else if (donationAmount != 0 || donationAmount >= 5000) {
-              token = await Store.getToken();
-              if (token == null) {
-                BlocProvider.of<StatusCubit>(context).setCreateAccount();
-              } else {
-                //do something
-                BlocProvider.of<PayNowCubit>(context)
-                    .PayNow(donationAmount.toString())
-                    .then((value) {
-                  //  EasyLoading.showToast(value.toString());
+                  onTap: () {
+                    if(!updateEnable){
+                      setState(() {
+                        updateEnable = true;
+                      });
+                    }else if(updateEnable){
+                      BlocProvider.of<UpdateProfileCubit>(context).updateProfile(profileName.text, profileMobileNumber.text, profileAddress.text).then((value){
+                        if(value){
+                          updateEnable = false;
+                          setState(() {
 
-                  Razorpay razorpay = Razorpay();
+                          });
+                        }
+                      });
+                    }
 
-                  var options = value;
-                  // var options = {
-                  //   //  'key': 'rzp_live_ILgsfZCZoFIKMb', //razor test
-                  //   'key': 'rzp_test_VdO7KK713OHMLX', //globizs test
-                  //   'amount': 100,
-                  //   'name': 'Acme Corp.',
-                  //   'description': 'Fine T-Shirt',
-                  //   'retry': {'enabled': true, 'max_count': 1},
-                  //   'send_sms_hash': true,
-                  //   'prefill': {
-                  //     'contact': '8888888888',
-                  //     'email': 'test@razorpay.com'
-                  //   },
-                  //   'external': {
-                  //     'wallets': ['paytm']
-                  //   }
-                  // };
-                  razorpay.on(
-                      Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
-                  razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-                      handlePaymentSuccessResponse);
-                  razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
-                      handleExternalWalletSelected);
-                  razorpay.open(options);
+
+                    // EasyLoading.show(
+                    //     status: "Please wait...", dismissOnTap: false);
+                    // if (createName.text.isEmpty ||
+                    //     createEmail.text.isEmpty ||
+                    //     createMobileNumber.text.isEmpty ||
+                    //     createAddress.text.isEmpty ||
+                    //     createPassword.text.isEmpty) {
+                    //   EasyLoading.dismiss();
+                    //   EasyLoading.showToast("Please fill all the fields");
+                    // } else {
+                    //   if (isEmail(createEmail.text.toString())) {
+                    //     if (createPassword.text.length >= 8) {
+                    //       BlocProvider.of<CreateaccountCubit>(context)
+                    //           .createAccount(
+                    //               createName.text,
+                    //               createEmail.text,
+                    //               createMobileNumber.text,
+                    //               createAddress.text,
+                    //               createPassword.text)
+                    //           .then((value) {
+                    //         if (value) {
+                    //           BlocProvider.of<StatusCubit>(context).setLogin();
+                    //           createName.clear();
+                    //           createEmail.clear();
+                    //           createMobileNumber.clear();
+                    //           createAddress.clear();
+                    //           createPassword.clear();
+                    //         }
+                    //       });
+                    //     } else {
+                    //       EasyLoading.showToast(
+                    //           "Minimum password length should be 8");
+                    //     }
+                    //   } else {
+                    //     EasyLoading.dismiss();
+                    //     EasyLoading.showToast("Invalid Email");
+                    //   }
+                    // }
+                  },
+                  child: CustomButton(
+                      backColor: c_black.withOpacity(0.5),
+                      text: updateEnable == true ? "Update" : "Edit",
+                      c_color: c_white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: _isHover == true ? 19 : 17)),
+            ),
+            Space(
+              height: 20,
+            ),
+            MouseRegion(
+              onHover: (event) {
+                setState(() {
+                  _isHoverLogout = true;
                 });
-              }
-            }
-          }, child: BlocBuilder<LoginstatusCubit, LoginstatusState>(
-            builder: (context, state) {
-              return CustomButton(
-                  backColor: c_black,
-                  text: state.loginStatus ? "PAY" : "NEXT",
-                  c_color: c_white,
-                  fontWeight: FontWeight.w400,
-                  fontSize: _isHover == true ? 19 : 17);
-            },
-          )),
-        )
+              },
+              onExit: (event) {
+                setState(() {
+                  _isHoverLogout = false;
+                });
+              },
+              child: InkWell(
+                  onTap: () {
+                    showAlertDialogLogout(context);
+                  },
+                  child: CustomButton(
+                      backColor: c_black.withOpacity(0.5),
+                      text: "Logout",
+                      c_color: c_white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: _isHoverLogout == true ? 19 : 17)),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -1671,181 +1769,6 @@ class _DonatePageState extends State<DonatePage> {
   String? token;
   void getToken() async {
     token = await Store.getToken();
-  }
-
-  void handlePaymentErrorResponse(PaymentFailureResponse response) {
-    /*
-    * PaymentFailureResponse contains three values:
-    * 1. Error Code
-    * 2. Error Description
-    * 3. Metadata
-    * */
-    showAlertDialog(
-        context,
-        "Payment Failed",
-        "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.toString()}",
-        "error");
-  }
-
-  void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
-    /*
-    * Payment Success Response contains three values:
-    * 1. Order ID
-    * 2. Payment ID
-    * 3. Signature
-    * */
-    print("Payment ID : ${response.paymentId}");
-    print("Order ID : ${response.orderId}");
-    print("Signature ID : ${response.signature}");
-
-    BlocProvider.of<ConfirmCubit>(context)
-        .confirmPayment("${response.paymentId}", "${response.orderId}",
-            "${response.signature}")
-        .then((value) {
-      if (value) {
-        // showAlertDialog(
-        //     context,
-        //     "Payment Successful",
-        //     "Payment ID: ${response.paymentId}\n\nOrder ID: ${response.orderId}",
-        //     "success");
-
-        BlocProvider.of<BeneficiariesCubit>(context)
-            .getBeneficiariesList("${response.paymentId}")
-            .then((value) {
-          if (value != false) {
-            EasyLoading.dismiss();
-            // print(value);
-            //print(value);
-            Map<String, dynamic> resJson = value;
-
-            print(resJson);
-
-            showDialog<void>(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: TextWidget(
-                      text: "Beneficiaries List",
-                      t_color: c_black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15),
-                  content: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 600,
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 600,
-                                height: getProportionateScreenWidth(100),
-                                child: ListView.builder(
-                                    itemCount:
-                                        resJson["payment_details"].length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Card(
-                                        child: ListTile(
-                                          title: Text(
-                                            "${resJson["payment_details"][index]["name"]}",
-                                            style: TextStyle(
-                                                color: c_black,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 15),
-                                          ),
-                                          trailing: Text(
-                                            "${resJson["payment_details"][index]["amount"]}",
-                                            style: TextStyle(
-                                                color: c_black,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 15),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                              ),
-                              Space(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      TextWidget(
-                                          text: "Net Amount : ",
-                                          t_color: c_black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13),
-                                      TextWidget(
-                                          text: "Tax : ",
-                                          t_color: c_black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13),
-                                      TextWidget(
-                                          text: "Grand Amount : ",
-                                          t_color: c_black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      TextWidget(
-                                          text: "${resJson["net_amount"]}",
-                                          t_color: c_black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13),
-                                      TextWidget(
-                                          text: "${resJson["tax"]}",
-                                          t_color: c_black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13),
-                                      TextWidget(
-                                          text: "${resJson["grand_amount"]}",
-                                          t_color: c_black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 13),
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  actions: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: CustomButton(
-                          backColor: c_black,
-                          text: "Okay",
-                          c_color: c_white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 17),
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        });
-      }
-    });
-  }
-
-  void handleExternalWalletSelected(ExternalWalletResponse response) {
-    showAlertDialog(context, "External Wallet Selected",
-        "${response.walletName}", "external_account");
   }
 
   void showAlertDialog(
