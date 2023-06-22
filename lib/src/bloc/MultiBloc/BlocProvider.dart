@@ -3,6 +3,7 @@ import 'package:donationapp/src/bloc/DashboardBloc/dashboard_cubit.dart';
 import 'package:donationapp/src/bloc/LoginBloc/login_cubit.dart';
 import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
 import 'package:donationapp/src/bloc/PayNowBloc/pay_now_cubit.dart';
+import 'package:donationapp/src/bloc/ReliefCampBloc/relief_camp_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../BeneficiariesBLoc/beneficiaries_cubit.dart';
@@ -55,6 +56,9 @@ class MultiBloc extends StatelessWidget {
       ),
       BlocProvider(
         create: (context) => UpdateProfileCubit(),
+      ),
+      BlocProvider(
+        create: (context) => ReliefCampCubit(),
       ),
 
     ], child: widgets);

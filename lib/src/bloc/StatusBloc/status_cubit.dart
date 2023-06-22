@@ -21,4 +21,7 @@ class StatusCubit extends Cubit<StatusState> {
   void setProfile(){
     emit(StatusProfile(status: 4));
   }
+  void setReliefCamp(){
+    emit(StatusProfile(status: 5));
+  }
 }

@@ -24,6 +24,7 @@ abstract class ApiURL {
   static const beneUpdateUrl = "/api/beneficiaries/";
   static const profileUrl = "/api/sites/profile";
   static const updateprofileUrl = "/api/sites/updateprofile";
+  static const reliefcampListUrl = "/api/beneficiaries/reliefcamp";
 
 
 

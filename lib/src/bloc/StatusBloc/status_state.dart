@@ -30,4 +30,7 @@ class StatusBenificiaries extends StatusState {
 class StatusProfile extends StatusState {
   StatusProfile({required super.status});
 }
+class StatusRelief extends StatusState {
+  StatusRelief({required super.status});
+}
 

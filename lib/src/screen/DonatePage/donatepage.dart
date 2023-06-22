@@ -8,6 +8,7 @@ import 'package:donationapp/src/bloc/LoginBloc/login_cubit.dart';
 import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
 import 'package:donationapp/src/bloc/PayNowBloc/pay_now_cubit.dart';
 import 'package:donationapp/src/bloc/ProfileBloc/profile_cubit.dart';
+import 'package:donationapp/src/bloc/ReliefCampBloc/relief_camp_cubit.dart';
 import 'package:donationapp/src/bloc/StatusBloc/status_cubit.dart';
 import 'package:donationapp/src/bloc/UpdateProfileBloc/update_profile_cubit.dart';
 import 'package:donationapp/src/constants/common_constant/icons_assets.dart';
@@ -195,7 +196,6 @@ class _DonatePageState extends State<DonatePage> {
   bool _bene = false;
   bool _login = false;
 
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -282,9 +282,12 @@ class _DonatePageState extends State<DonatePage> {
                                     setState(() {});
                                   },
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      BlocProvider.of<StatusCubit>(context)
+                                          .setReliefCamp();
+                                    },
                                     child: TextWidget(
-                                        text: "About",
+                                        text: "Relief Camps",
                                         t_color:
                                             _about == true ? c_gold : c_white,
                                         fontWeight: FontWeight.w600,
@@ -406,10 +409,14 @@ class _DonatePageState extends State<DonatePage> {
                                                 .then((value) {
                                               if (value != false) {
                                                 //profile
-                                                 profileName.text = value["name"];
-                                                 profileAddress.text =  value["address"];
-                                                 profileEmail.text = value["email"];
-                                                 profileMobileNumber.text = value["mobile"];
+                                                profileName.text =
+                                                    value["name"];
+                                                profileAddress.text =
+                                                    value["address"];
+                                                profileEmail.text =
+                                                    value["email"];
+                                                profileMobileNumber.text =
+                                                    value["mobile"];
 
                                                 BlocProvider.of<StatusCubit>(
                                                         context)
@@ -489,7 +496,9 @@ class _DonatePageState extends State<DonatePage> {
                                           if (state.status == 3)
                                             BeneficiariesList(context),
                                           if (state.status == 4)
-                                            Profile(context)
+                                            Profile(context),
+                                          if (state.status == 5)
+                                            ReliefCampList(context)
                                         ],
                                       );
                                     },
@@ -1331,8 +1340,7 @@ class _DonatePageState extends State<DonatePage> {
                         .login(loginEmail.text, loginPassword.text, context)
                         .then((value) {
                       if (value) {
-                        BlocProvider.of<StatusCubit>(context)
-                            .setDonate();
+                        BlocProvider.of<StatusCubit>(context).setDonate();
                         loginEmail.clear();
                         loginPassword.clear();
                       } else {
@@ -1577,11 +1585,14 @@ class _DonatePageState extends State<DonatePage> {
           children: [
             TextFormField(
               controller: profileName,
-              style: custom_font(c_black,FontWeight.w500,15),
-
+              style: custom_font(c_black, FontWeight.w500, 15),
               decoration: InputDecoration(
                   enabled: updateEnable,
-                label: TextWidget(text: "Name", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 15),
+                  label: TextWidget(
+                      text: "Name",
+                      t_color: c_black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
                   filled: true,
                   fillColor: Colors.white,
                   hintText: 'Name',
@@ -1598,11 +1609,15 @@ class _DonatePageState extends State<DonatePage> {
             ),
             TextFormField(
               controller: profileEmail,
-              style: custom_font(c_black,FontWeight.w500,15),
+              style: custom_font(c_black, FontWeight.w500, 15),
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   enabled: false,
-                  label: TextWidget(text: "Email", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 15),
+                  label: TextWidget(
+                      text: "Email",
+                      t_color: c_black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
                   filled: true,
                   fillColor: Colors.white,
                   hintText: 'Email',
@@ -1619,11 +1634,15 @@ class _DonatePageState extends State<DonatePage> {
             ),
             TextFormField(
               controller: profileMobileNumber,
-              style: custom_font(c_black,FontWeight.w500,15),
+              style: custom_font(c_black, FontWeight.w500, 15),
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                   enabled: updateEnable,
-                  label: TextWidget(text: "Mobile Number", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 15),
+                  label: TextWidget(
+                      text: "Mobile Number",
+                      t_color: c_black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
                   filled: true,
                   fillColor: Colors.white,
                   hintText: 'Mobile Number',
@@ -1640,10 +1659,14 @@ class _DonatePageState extends State<DonatePage> {
             ),
             TextFormField(
               controller: profileAddress,
-              style: custom_font(c_black,FontWeight.w500,15),
+              style: custom_font(c_black, FontWeight.w500, 15),
               decoration: InputDecoration(
                   enabled: updateEnable,
-                  label: TextWidget(text: "Address", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 15),
+                  label: TextWidget(
+                      text: "Address",
+                      t_color: c_black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
                   filled: true,
                   fillColor: Colors.white,
                   hintText: 'Address',
@@ -1679,17 +1702,18 @@ class _DonatePageState extends State<DonatePage> {
                       EasyLoading.dismiss();
                       EasyLoading.showToast("Please fill all the fields");
                     } else {
-                      if(!updateEnable){
+                      if (!updateEnable) {
                         setState(() {
                           updateEnable = true;
                         });
-                      }else if(updateEnable){
-                        BlocProvider.of<UpdateProfileCubit>(context).updateProfile(profileName.text, profileMobileNumber.text, profileAddress.text).then((value){
-                          if(value){
+                      } else if (updateEnable) {
+                        BlocProvider.of<UpdateProfileCubit>(context)
+                            .updateProfile(profileName.text,
+                                profileMobileNumber.text, profileAddress.text)
+                            .then((value) {
+                          if (value) {
                             updateEnable = false;
-                            setState(() {
-
-                            });
+                            setState(() {});
                           }
                         });
                       }
@@ -1730,6 +1754,221 @@ class _DonatePageState extends State<DonatePage> {
           ],
         ),
       ],
+    );
+  }
+
+  Expanded ReliefCampList(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextWidget(
+              text: "Relief Camps",
+              t_color: c_black,
+              fontWeight: FontWeight.w400,
+              fontSize: MediaQuery.of(context).size.width >= 1500 ? 23 : 20),
+          Space(
+            height: 20,
+          ),
+          Expanded(
+            child: BlocBuilder<ReliefCampCubit, ReliefCampState>(
+              builder: (context, state) {
+                if (state is ReliefCampInitial) {
+                  BlocProvider.of<ReliefCampCubit>(context).getReliefCampList();
+                  return Container();
+                }
+                if (state is ReliefCampInitData) {
+                  return Container();
+                }
+                if (state is ReliefCampLoaded) {
+                  return Column(
+                    children: [
+                      Expanded(
+                          child: AnimationLimiter(
+                        child: ListView.builder(
+                          //   controller: _controller,
+                          padding: EdgeInsets.all(
+                              MediaQuery.of(context).size.width / 150),
+                          //  padding: EdgeInsets.symmetric(horizontal: 10),
+                          physics: BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
+                          itemCount: state.response.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return AnimationConfiguration.staggeredList(
+                              position: index,
+                              delay: Duration(milliseconds: 100),
+                              child: SlideAnimation(
+                                duration: Duration(milliseconds: 2500),
+                                curve: Curves.fastLinearToSlowEaseIn,
+                                child: FadeInAnimation(
+                                    curve: Curves.fastLinearToSlowEaseIn,
+                                    duration: Duration(milliseconds: 2500),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        //  height: MediaQuery.of(context).size.width / 25,
+                                        // decoration: BoxDecoration(
+                                        //     color: c_black.withOpacity(0.5),
+                                        //     border: Border.all(color: c_black)),
+                                        child: Center(
+                                            child: InkWell(
+                                          onTap: () {},
+                                          child: Card(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5.0),
+                                              child: Container(
+                                                width: double.infinity,
+                                                padding: EdgeInsets.all(10),
+                                                child: Column(
+                                                  children: [
+                                                    MediaQuery.of(context)
+                                                                .size
+                                                                .width >=
+                                                            1500
+                                                        ? Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 7,
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    TextWidget(
+                                                                        text:
+                                                                            "District Name : ${state.response[index]['district_name'].toString()}",
+                                                                        t_color:
+                                                                            c_black,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                        fontSize:
+                                                                            getProportionateScreenWidth(2.5)),
+                                                                    Space(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    TextWidget(
+                                                                        text:
+                                                                            "No. of Camp : ${state.response[index]['no_of_camp'].toString()}",
+                                                                        t_color:
+                                                                            c_black,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                        fontSize:
+                                                                            getProportionateScreenWidth(2.5)),
+                                                                    Space(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        : Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                SizedBox(
+                                                                  width:
+                                                                      getProportionateScreenWidth(
+                                                                          70),
+                                                                  child: TextWidget(
+                                                                      text:
+                                                                          "District Name : ${state.response[index]['district_name'].toString()}",
+                                                                      t_color:
+                                                                          c_black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          getProportionateScreenWidth(
+                                                                              2.5)),
+                                                                ),
+                                                                Space(
+                                                                  height: 10,
+                                                                ),
+                                                                SizedBox(
+                                                                  width:
+                                                                      getProportionateScreenWidth(
+                                                                          70),
+                                                                  child: TextWidget(
+                                                                      text:
+                                                                          "No. of Camp : ${state.response[index]['no_of_camp'].toString()}",
+                                                                      t_color:
+                                                                          c_black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      fontSize:
+                                                                          getProportionateScreenWidth(
+                                                                              2.5)),
+                                                                ),
+                                                                Space(
+                                                                  height: 10,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )),
+                                      ),
+                                    )),
+                              ),
+                            );
+                          },
+                        ),
+                      )),
+                    ],
+                  );
+                }
+                if (state is ReliefCampError) {
+                  return Container();
+                }
+                return Container();
+              },
+            ),
+          ),
+          Space(
+            height: 20,
+          ),
+          // Row(
+          //   children: [
+          //     Checkbox(
+          //         value: _checkBox,
+          //         onChanged: (value) {
+          //           _checkBox = value!;
+          //           setState(() {});
+          //         }),
+          //     TextWidget(
+          //         text: "Donate Anonymously",
+          //         t_color: c_black,
+          //         fontWeight: FontWeight.w600,
+          //         fontSize: 18),
+          //   ],
+          // ),
+          Space(
+            height: 20,
+          ),
+        ],
+      ),
     );
   }
 

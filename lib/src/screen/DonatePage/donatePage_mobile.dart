@@ -4,6 +4,7 @@ import 'dart:js_interop';
 import 'package:donationapp/src/bloc/HistoryBloc/history_cubit.dart';
 import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
 import 'package:donationapp/src/bloc/ProfileBloc/profile_cubit.dart';
+import 'package:donationapp/src/bloc/ReliefCampBloc/relief_camp_cubit.dart';
 import 'package:donationapp/src/constants/widget_constant/drawer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -288,6 +289,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                   if (state.status == 3)
                                     BeneficiariesList(context),
                                   if (state.status == 4) Profile(context),
+                                  if (state.status == 5) ReliefCamp(context),
                                 ],
                               );
                             },
@@ -1283,6 +1285,174 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
           ],
         ),
       ],
+    );
+  }
+
+  Expanded ReliefCamp(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: TextWidget(
+                text: "Relief Camp",
+                t_color: c_black,
+                fontWeight: FontWeight.w400,
+                fontSize: 23),
+          ),
+          Space(
+            height: 20,
+          ),
+          Expanded(
+            flex: 10,
+            child: BlocBuilder<ReliefCampCubit, ReliefCampState>(
+              builder: (context, state) {
+                if (state is ReliefCampInitial) {
+                  BlocProvider.of<ReliefCampCubit>(context).getReliefCampList();
+                  return Container();
+                }
+                if (state is ReliefCampLoaded) {
+                  // ListView.builder(
+                  //   controller: _controller,
+                  //   itemCount: _posts.length,
+                  //   itemBuilder: (_, index) => SizedBox(
+                  //     height: 300,
+                  //     child: Card(
+                  //       margin: const EdgeInsets.symmetric(
+                  //           vertical: 8, horizontal: 10),
+                  //       child: ListTile(
+                  //         title: Text(_posts[index]['id'].toString()),
+                  //         subtitle: Text(_posts[index]['name'].toString()),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
+                  return Column(
+                    children: [
+                      Expanded(
+                          child: AnimationLimiter(
+                            child: ListView.builder(
+                              //   controller: _controller,
+                              padding: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width / 150),
+                              //  padding: EdgeInsets.symmetric(horizontal: 10),
+                              physics: BouncingScrollPhysics(
+                                  parent: AlwaysScrollableScrollPhysics()),
+                              itemCount: state.response.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  delay: Duration(milliseconds: 100),
+                                  child: SlideAnimation(
+                                    duration: Duration(milliseconds: 2500),
+                                    curve: Curves.fastLinearToSlowEaseIn,
+                                    child: FadeInAnimation(
+                                        curve: Curves.fastLinearToSlowEaseIn,
+                                        duration: Duration(milliseconds: 2500),
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                          child: Container(
+                                            width: double.infinity,
+                                            //  height: MediaQuery.of(context).size.width / 25,
+                                            // decoration: BoxDecoration(
+                                            //     color: c_black.withOpacity(0.5),
+                                            //     border: Border.all(color: c_black)),
+                                            child: Center(
+                                                child: InkWell(
+                                                  onTap: () {},
+                                                  child: Card(
+                                                    child: Padding(
+                                                      padding:
+                                                      const EdgeInsets.symmetric(
+                                                          horizontal: 5.0),
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        padding: EdgeInsets.all(10),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                          children: [
+                                                            Expanded(
+                                                              flex: 7,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                                children: [
+                                                                  TextWidget(
+                                                                      text:
+                                                                      "District : ${state.response[index]['district_name'].toString()}",
+                                                                      t_color: c_black,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                      fontSize:
+                                                                      getProportionateScreenWidth(
+                                                                          10)),
+                                                                  Space(
+                                                                    height: 10,
+                                                                  ),
+                                                                  TextWidget(
+                                                                      text:
+                                                                      "No. of Camp : ${state.response[index]['no_of_camp'].toString()}",
+                                                                      t_color: c_black,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                      fontSize:
+                                                                      getProportionateScreenWidth(
+                                                                          10)),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ),
+                                        )),
+                                  ),
+                                );
+                              },
+                            ),
+                          )),
+                    ],
+                  );
+                }
+                if (state is ReliefCampError) {
+                  return Container();
+                }
+                return Container();
+              },
+            ),
+          ),
+
+          // Row(
+          //   children: [
+          //     Checkbox(
+          //         value: _checkBox,
+          //         onChanged: (value) {
+          //           _checkBox = value!;
+          //           setState(() {});
+          //         }),
+          //     TextWidget(
+          //         text: "Donate Anonymously",
+          //         t_color: c_black,
+          //         fontWeight: FontWeight.w600,
+          //         fontSize: 18),
+          //   ],
+          // ),
+          Space(
+            height: 20,
+          ),
+        ],
+      ),
     );
   }
 

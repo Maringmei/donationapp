@@ -80,12 +80,14 @@ class MyDrawer extends StatelessWidget {
                               ),
                               ListTile(
                                 title: TextWidget(
-                                    text: "About",
+                                    text: "Relief Camps",
                                     t_color: c_black_opa,
                                     fontWeight: FontWeight.w400,
                                     fontSize: 18),
                                 onTap: () {
                                   Navigator.pop(context);
+                                  BlocProvider.of<StatusCubit>(context)
+                                      .setReliefCamp();
                                 },
                                 hoverColor: Colors.grey[200], // Set hover color
                               ),
