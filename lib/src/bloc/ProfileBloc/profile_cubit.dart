@@ -19,4 +19,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       return res;
     }
   }
+
+  //for mobile
+  void setProfile() {
+    EasyLoading.showToast("Set PROFILE");
+    emit(ProfileInitial(response: null));
+  }
 }

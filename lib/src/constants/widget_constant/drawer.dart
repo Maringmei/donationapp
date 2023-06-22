@@ -11,6 +11,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../../Storage/storage.dart';
 import '../../bloc/DashboardBloc/dashboard_cubit.dart';
+import '../../bloc/ProfileBloc/profile_cubit.dart';
 import '../common_constant/color_constant.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -49,7 +50,7 @@ class MyDrawer extends StatelessWidget {
                                     ),
                                     Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         TextWidget(
                                             text: "Tengbang",
@@ -72,7 +73,8 @@ class MyDrawer extends StatelessWidget {
                                   Navigator.pop(context);
                                   BlocProvider.of<StatusCubit>(context)
                                       .setDonate();
-                                  BlocProvider.of<DashboardCubit>(context).refreshDashboard();
+                                  BlocProvider.of<DashboardCubit>(context)
+                                      .refreshDashboard();
                                 },
                                 hoverColor: Colors.grey[200], // Set hover color
                               ),
@@ -109,21 +111,20 @@ class MyDrawer extends StatelessWidget {
                                         fontWeight: FontWeight.w400,
                                         fontSize: 18),
                                     onTap: () {
-                                      if(state.loginStatus){
+                                      if (state.loginStatus) {
                                         Navigator.pop(context);
                                         BlocProvider.of<StatusCubit>(context)
                                             .setBenificiaries();
-                                        BlocProvider.of<HistoryCubit>(context).refreshHistory();
-
-                                      }else{
+                                        BlocProvider.of<HistoryCubit>(context)
+                                            .refreshHistory();
+                                      } else {
                                         BlocProvider.of<StatusCubit>(context)
                                             .setLogin();
                                         Navigator.pop(context);
                                       }
-
                                     },
-                                    hoverColor: Colors
-                                        .grey[200], // Set hover color
+                                    hoverColor:
+                                        Colors.grey[200], // Set hover color
                                   );
                                 },
                               ),
@@ -143,8 +144,12 @@ class MyDrawer extends StatelessWidget {
                                         // await Store.clear(context);
                                         // BlocProvider.of<LoginstatusCubit>(
                                         //     context).setLogout();
-                                        BlocProvider.of<StatusCubit>(
-                                            context).setProfile();
+                                        BlocProvider.of<StatusCubit>(context).setProfile();
+                                        // BlocProvider.of<ProfileCubit>(context)
+                                        //     .getProfileData().then((value){
+                                        //       BlocProvider.of<StatusCubit>(context).setProfile();
+                                        // });
+
                                         // showAlertDialogLogout(context);
                                       } else {
                                         BlocProvider.of<StatusCubit>(context)
@@ -152,8 +157,8 @@ class MyDrawer extends StatelessWidget {
                                         Navigator.pop(context);
                                       }
                                     },
-                                    hoverColor: Colors
-                                        .grey[200], // Set hover color
+                                    hoverColor:
+                                        Colors.grey[200], // Set hover color
                                   );
                                 },
                               ),

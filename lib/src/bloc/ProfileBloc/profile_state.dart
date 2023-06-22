@@ -11,6 +11,10 @@ class ProfileInitial extends ProfileState {
   ProfileInitial({required super.response});
 }
 
+class ProfileIdol extends ProfileState {
+  ProfileIdol({required super.response});
+}
+
 class ProfileLoaded extends ProfileState {
   ProfileLoaded({required super.response});
 }
