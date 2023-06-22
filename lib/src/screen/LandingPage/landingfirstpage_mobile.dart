@@ -105,7 +105,7 @@ class LandingFirstPage extends StatelessWidget {
                                         BlocProvider.of<LoginstatusCubit>(
                                                 context)
                                             .setLogin();
-                                        BlocProvider.of<StatusCubit>(context).setBenificiaries();
+                                        BlocProvider.of<StatusCubit>(context).setDonate();
                                       }
 
                                       // showDialog<void>(

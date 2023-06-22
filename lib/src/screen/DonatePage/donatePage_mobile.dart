@@ -896,7 +896,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                         .then((value) {
                       if (value) {
                         BlocProvider.of<StatusCubit>(context)
-                            .setBenificiaries();
+                            .setDonate();
                         loginEmail.clear();
                         loginPassword.clear();
                       } else {

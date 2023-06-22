@@ -1165,7 +1165,7 @@ class _DonatePageState extends State<DonatePage> {
                   const Padding(
                     padding: EdgeInsets.only(top: 10, bottom: 40),
                     child: Center(
-                      child: CircularProgressIndicator(),
+                      child: LinearProgressIndicator(),
                     ),
                   ),
                 if (_hasNextPage == false) Container(),
@@ -1332,7 +1332,7 @@ class _DonatePageState extends State<DonatePage> {
                         .then((value) {
                       if (value) {
                         BlocProvider.of<StatusCubit>(context)
-                            .setBenificiaries();
+                            .setDonate();
                         loginEmail.clear();
                         loginPassword.clear();
                       } else {
