@@ -23,6 +23,7 @@ import '../../bloc/LoginBloc/login_cubit.dart';
 import '../../bloc/PayNowBloc/pay_now_cubit.dart';
 import '../../bloc/SeeMoreBloc/see_mode_cubit.dart';
 import '../../bloc/StatusBloc/status_cubit.dart';
+import '../../bloc/UpdateProfileBloc/update_profile_cubit.dart';
 import '../../constants/common_constant/check_email.dart';
 import '../../constants/common_constant/color_constant.dart';
 import '../../constants/common_constant/currency_format.dart';
@@ -156,6 +157,8 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
 
   int donationAmount = 0;
 
+  bool updateEnable = false;
+
   //login
   TextEditingController loginEmail = TextEditingController();
   TextEditingController loginPassword = TextEditingController();
@@ -284,6 +287,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                   if (state.status == 2) Login(context),
                                   if (state.status == 3)
                                     BeneficiariesList(context),
+                                  if (state.status == 4) Profile(context),
                                 ],
                               );
                             },
@@ -1115,31 +1119,37 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
         Space(height: 20),
         BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
-            if(state is ProfileInitial){
-              BlocProvider.of<ProfileCubit>(context).getProfileData().then((value){
-                EasyLoading.showToast("Profile INIT");
-                profileName.text = state.response["name"];
-                profileAddress.text =  state.response["address"];
-                profileEmail.text = state.response["email"];
-                profileMobileNumber.text = state.response["mobile"];
+            if (state is ProfileInitial) {
+              BlocProvider.of<ProfileCubit>(context)
+                  .getProfileData()
+                  .then((value) {
+                profileName.text = value["name"];
+                profileAddress.text = value["address"];
+                profileEmail.text = value["email"];
+                profileMobileNumber.text = value["mobile"];
               });
               return Container();
             }
-            if(state is ProfileLoaded){
-              EasyLoading.showToast("Profile LOADED");
+            if (state is ProfileLoaded) {
               return Column(
                 children: [
                   TextFormField(
                     controller: profileName,
                     decoration: InputDecoration(
+                        label: TextWidget(
+                            text: "Name",
+                            t_color: c_black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15),
+                        enabled: updateEnable,
                         filled: true,
                         fillColor: Colors.white,
                         hintText: 'Name',
                         hintStyle: GoogleFonts.inter(
-                            height: 1,
-                            color: c_black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18)
+                                height: 1,
+                                color: c_black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18)
                             .copyWith(),
                         border: OutlineInputBorder()),
                   ),
@@ -1150,14 +1160,20 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                     controller: profileEmail,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
+                        label: TextWidget(
+                            text: "Email",
+                            t_color: c_black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15),
+                        enabled: false,
                         filled: true,
                         fillColor: Colors.white,
                         hintText: 'Email',
                         hintStyle: GoogleFonts.inter(
-                            height: 1,
-                            color: c_black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18)
+                                height: 1,
+                                color: c_black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18)
                             .copyWith(),
                         border: OutlineInputBorder()),
                   ),
@@ -1168,14 +1184,20 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                     controller: profileMobileNumber,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
+                        label: TextWidget(
+                            text: "Mobile Number",
+                            t_color: c_black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15),
+                        enabled: updateEnable,
                         filled: true,
                         fillColor: Colors.white,
                         hintText: 'Mobile Number',
                         hintStyle: GoogleFonts.inter(
-                            height: 1,
-                            color: c_black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18)
+                                height: 1,
+                                color: c_black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18)
                             .copyWith(),
                         border: OutlineInputBorder()),
                   ),
@@ -1185,21 +1207,27 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                   TextFormField(
                     controller: profileAddress,
                     decoration: InputDecoration(
+                        label: TextWidget(
+                            text: "Address",
+                            t_color: c_black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15),
+                        enabled: updateEnable,
                         filled: true,
                         fillColor: Colors.white,
                         hintText: 'Address',
                         hintStyle: GoogleFonts.inter(
-                            height: 1,
-                            color: c_black,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 18)
+                                height: 1,
+                                color: c_black,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18)
                             .copyWith(),
                         border: OutlineInputBorder()),
                   ),
                 ],
               );
             }
-          return Container();
+            return Container();
           },
         ),
         Space(height: 20),
@@ -1208,48 +1236,31 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
             MouseRegion(
               child: InkWell(
                   onTap: () {
-                    // EasyLoading.show(
-                    //     status: "Please wait...", dismissOnTap: false);
-                    // if (createName.text.isEmpty ||
-                    //     createEmail.text.isEmpty ||
-                    //     createMobileNumber.text.isEmpty ||
-                    //     createAddress.text.isEmpty ||
-                    //     createPassword.text.isEmpty) {
-                    //   EasyLoading.dismiss();
-                    //   EasyLoading.showToast("Please fill all the fields");
-                    // } else {
-                    //   if (isEmail(createEmail.text.toString())) {
-                    //     if (createPassword.text.length >= 8) {
-                    //       BlocProvider.of<CreateaccountCubit>(context)
-                    //           .createAccount(
-                    //               createName.text,
-                    //               createEmail.text,
-                    //               createMobileNumber.text,
-                    //               createAddress.text,
-                    //               createPassword.text)
-                    //           .then((value) {
-                    //         if (value) {
-                    //           BlocProvider.of<StatusCubit>(context).setLogin();
-                    //           createName.clear();
-                    //           createEmail.clear();
-                    //           createMobileNumber.clear();
-                    //           createAddress.clear();
-                    //           createPassword.clear();
-                    //         }
-                    //       });
-                    //     } else {
-                    //       EasyLoading.showToast(
-                    //           "Minimum password length should be 8");
-                    //     }
-                    //   } else {
-                    //     EasyLoading.dismiss();
-                    //     EasyLoading.showToast("Invalid Email");
-                    //   }
-                    // }
+                    if (createName.text.isEmpty ||
+                        createMobileNumber.text.isEmpty ||
+                        createAddress.text.isEmpty) {
+                      EasyLoading.dismiss();
+                      EasyLoading.showToast("Please fill all the fields");
+                    } else {
+                      if(!updateEnable){
+                        setState(() {
+                          updateEnable = true;
+                        });
+                      }else if(updateEnable){
+                        BlocProvider.of<UpdateProfileCubit>(context).updateProfile(profileName.text, profileMobileNumber.text, profileAddress.text).then((value){
+                          if(value){
+                            updateEnable = false;
+                            setState(() {
+
+                            });
+                          }
+                        });
+                      }
+                    }
                   },
                   child: CustomButton(
                       backColor: c_black.withOpacity(0.5),
-                      text: "Edit",
+                      text: updateEnable == true ? "Update" : "Edit",
                       c_color: c_white,
                       fontWeight: FontWeight.w400,
                       fontSize: 17)),
@@ -1260,44 +1271,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
             MouseRegion(
               child: InkWell(
                   onTap: () {
-                    // EasyLoading.show(
-                    //     status: "Please wait...", dismissOnTap: false);
-                    // if (createName.text.isEmpty ||
-                    //     createEmail.text.isEmpty ||
-                    //     createMobileNumber.text.isEmpty ||
-                    //     createAddress.text.isEmpty ||
-                    //     createPassword.text.isEmpty) {
-                    //   EasyLoading.dismiss();
-                    //   EasyLoading.showToast("Please fill all the fields");
-                    // } else {
-                    //   if (isEmail(createEmail.text.toString())) {
-                    //     if (createPassword.text.length >= 8) {
-                    //       BlocProvider.of<CreateaccountCubit>(context)
-                    //           .createAccount(
-                    //               createName.text,
-                    //               createEmail.text,
-                    //               createMobileNumber.text,
-                    //               createAddress.text,
-                    //               createPassword.text)
-                    //           .then((value) {
-                    //         if (value) {
-                    //           BlocProvider.of<StatusCubit>(context).setLogin();
-                    //           createName.clear();
-                    //           createEmail.clear();
-                    //           createMobileNumber.clear();
-                    //           createAddress.clear();
-                    //           createPassword.clear();
-                    //         }
-                    //       });
-                    //     } else {
-                    //       EasyLoading.showToast(
-                    //           "Minimum password length should be 8");
-                    //     }
-                    //   } else {
-                    //     EasyLoading.dismiss();
-                    //     EasyLoading.showToast("Invalid Email");
-                    //   }
-                    // }
+                    showAlertDialogLogout(context);
                   },
                   child: CustomButton(
                       backColor: c_black.withOpacity(0.5),
@@ -1360,20 +1334,32 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
     // set up the buttons
     Widget cancelButton = ElevatedButton(
       child: const Text("CANCEL"),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pop(context);
+      },
     );
 
     Widget continueButton = ElevatedButton(
       child: const Text("OK"),
-      onPressed: () {},
+      onPressed: () async {
+        await Store.clear(context);
+        BlocProvider.of<LoginstatusCubit>(context).setLogout();
+        BlocProvider.of<StatusCubit>(context).setLogin();
+        Navigator.pop(context);
+      },
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: TextWidget(
-          text: "Do you want to logout?",
-          t_color: c_black,
-          fontWeight: FontWeight.w700,
-          fontSize: 15),
+      title: SizedBox(
+        height: 100,
+        width: 100,
+        child: TextWidget(
+            text: "Do you want to logout?",
+            t_color: c_black,
+            fontWeight: FontWeight.w700,
+            fontSize: 15),
+      ),
+
       // content: TextWidget(text: message, t_color: c_black, fontWeight: FontWeight.w700, fontSize: 15),
       actions: [cancelButton, continueButton],
     );

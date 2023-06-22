@@ -40,7 +40,7 @@ class UpdateProfileAPI {
           );
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
         EasyLoading.dismiss();
-        EasyLoading.showToast("Update Successfully");
+        EasyLoading.showToast("Updated Successfully");
         // await _saveToken(response.data);
         // EasyLoading.showToast(response.data.toString());
         return true;

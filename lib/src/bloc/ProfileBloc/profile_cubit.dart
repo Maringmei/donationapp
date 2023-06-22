@@ -22,7 +22,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   //for mobile
   void setProfile() {
-    EasyLoading.showToast("Set PROFILE");
     emit(ProfileInitial(response: null));
   }
 }

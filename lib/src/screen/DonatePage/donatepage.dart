@@ -1673,60 +1673,27 @@ class _DonatePageState extends State<DonatePage> {
               },
               child: InkWell(
                   onTap: () {
-                    if(!updateEnable){
-                      setState(() {
-                        updateEnable = true;
-                      });
-                    }else if(updateEnable){
-                      BlocProvider.of<UpdateProfileCubit>(context).updateProfile(profileName.text, profileMobileNumber.text, profileAddress.text).then((value){
-                        if(value){
-                          updateEnable = false;
-                          setState(() {
+                    if (createName.text.isEmpty ||
+                        createMobileNumber.text.isEmpty ||
+                        createAddress.text.isEmpty) {
+                      EasyLoading.dismiss();
+                      EasyLoading.showToast("Please fill all the fields");
+                    } else {
+                      if(!updateEnable){
+                        setState(() {
+                          updateEnable = true;
+                        });
+                      }else if(updateEnable){
+                        BlocProvider.of<UpdateProfileCubit>(context).updateProfile(profileName.text, profileMobileNumber.text, profileAddress.text).then((value){
+                          if(value){
+                            updateEnable = false;
+                            setState(() {
 
-                          });
-                        }
-                      });
+                            });
+                          }
+                        });
+                      }
                     }
-
-
-                    // EasyLoading.show(
-                    //     status: "Please wait...", dismissOnTap: false);
-                    // if (createName.text.isEmpty ||
-                    //     createEmail.text.isEmpty ||
-                    //     createMobileNumber.text.isEmpty ||
-                    //     createAddress.text.isEmpty ||
-                    //     createPassword.text.isEmpty) {
-                    //   EasyLoading.dismiss();
-                    //   EasyLoading.showToast("Please fill all the fields");
-                    // } else {
-                    //   if (isEmail(createEmail.text.toString())) {
-                    //     if (createPassword.text.length >= 8) {
-                    //       BlocProvider.of<CreateaccountCubit>(context)
-                    //           .createAccount(
-                    //               createName.text,
-                    //               createEmail.text,
-                    //               createMobileNumber.text,
-                    //               createAddress.text,
-                    //               createPassword.text)
-                    //           .then((value) {
-                    //         if (value) {
-                    //           BlocProvider.of<StatusCubit>(context).setLogin();
-                    //           createName.clear();
-                    //           createEmail.clear();
-                    //           createMobileNumber.clear();
-                    //           createAddress.clear();
-                    //           createPassword.clear();
-                    //         }
-                    //       });
-                    //     } else {
-                    //       EasyLoading.showToast(
-                    //           "Minimum password length should be 8");
-                    //     }
-                    //   } else {
-                    //     EasyLoading.dismiss();
-                    //     EasyLoading.showToast("Invalid Email");
-                    //   }
-                    // }
                   },
                   child: CustomButton(
                       backColor: c_black.withOpacity(0.5),

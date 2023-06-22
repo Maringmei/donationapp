@@ -26,3 +26,8 @@ class StatusLogin extends StatusState {
 class StatusBenificiaries extends StatusState {
   StatusBenificiaries({required super.status});
 }
+
+class StatusProfile extends StatusState {
+  StatusProfile({required super.status});
+}
+

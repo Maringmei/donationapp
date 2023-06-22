@@ -19,6 +19,6 @@ class StatusCubit extends Cubit<StatusState> {
     emit(StatusBenificiaries(status: 3));
   }
   void setProfile(){
-    emit(StatusBenificiaries(status: 4));
+    emit(StatusProfile(status: 4));
   }
 }
