@@ -23,4 +23,7 @@ class ReliefCampCubit extends Cubit<ReliefCampState> {
     getReliefCampList();
    emit(ReliefCampInitData(response: null));
   }
+  void refreshReliefCamp(){
+    emit(ReliefCampInitial(response: null));
+  }
 }

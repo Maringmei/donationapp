@@ -17,6 +17,7 @@ import '../../bloc/LoginStatus/loginstatus_cubit.dart';
 import '../../bloc/StatusBloc/status_cubit.dart';
 import '../../constants/widget_constant/custom_button.dart';
 import '../../constants/widget_constant/space.dart';
+import '../../service/Test/test_api.dart';
 import '../DonatePage/donatepage.dart';
 
 class LandingFirstPageWeb extends StatelessWidget {
@@ -123,7 +124,7 @@ class LandingFirstPageWeb extends StatelessWidget {
                               height: getProportionateScreenWidth(13),
                               child: ElevatedButton(
                                   onPressed: () async {
-
+                                    //real
                                     Route route = MaterialPageRoute(
                                         builder: (context) => DonatePage());
                                     Navigator.push(context, route);
@@ -140,7 +141,9 @@ class LandingFirstPageWeb extends StatelessWidget {
                                     }
 
 
-                                    //
+                                    // //test
+                                    // TestAPI api = TestAPI();
+                                    // var res = await api.testAPI();
 
                                     // showDialog<void>(
                                     //   context: context,

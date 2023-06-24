@@ -272,31 +272,44 @@ class _DonatePageState extends State<DonatePage> {
                                 Space(
                                   width: 10,
                                 ),
-                                MouseRegion(
-                                  onEnter: (value) {
-                                    _about = true;
-                                    setState(() {});
-                                  },
-                                  onExit: (value) {
-                                    _about = false;
-                                    setState(() {});
-                                  },
-                                  child: InkWell(
-                                    onTap: () {
-                                      BlocProvider.of<StatusCubit>(context)
-                                          .setReliefCamp();
-                                    },
-                                    child: TextWidget(
-                                        text: "Relief Camps",
-                                        t_color:
-                                            _about == true ? c_gold : c_white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize:
-                                            MediaQuery.of(context).size.width >=
+                                BlocBuilder<LoginstatusCubit, LoginstatusState>(
+                                  builder: (context, state) {
+                                    return MouseRegion(
+                                      onEnter: (value) {
+                                        _about = true;
+                                        setState(() {});
+                                      },
+                                      onExit: (value) {
+                                        _about = false;
+                                        setState(() {});
+                                      },
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (state.loginStatus) {
+                                            BlocProvider.of<StatusCubit>(context)
+                                                .setReliefCamp();
+                                          } else {
+                                            BlocProvider.of<StatusCubit>(
+                                                context)
+                                                .setLogin();
+                                          }
+
+                                        },
+                                        child: TextWidget(
+                                            text: "Relief Camps",
+                                            t_color: _about == true
+                                                ? c_gold
+                                                : c_white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width >=
                                                     1500
                                                 ? 15
                                                 : 12),
-                                  ),
+                                      ),
+                                    );
+                                  },
                                 ),
                                 Space(
                                   width: 10,
@@ -1696,17 +1709,17 @@ class _DonatePageState extends State<DonatePage> {
               },
               child: InkWell(
                   onTap: () {
-                    if (createName.text.isEmpty ||
-                        createMobileNumber.text.isEmpty ||
-                        createAddress.text.isEmpty) {
-                      EasyLoading.dismiss();
-                      EasyLoading.showToast("Please fill all the fields");
-                    } else {
-                      if (!updateEnable) {
-                        setState(() {
-                          updateEnable = true;
-                        });
-                      } else if (updateEnable) {
+                    if (!updateEnable) {
+                      setState(() {
+                        updateEnable = true;
+                      });
+                    } else if (updateEnable) {
+                      if (profileName.text.isEmpty ||
+                          profileMobileNumber.text.isEmpty ||
+                          profileAddress.text.isEmpty) {
+                        EasyLoading.dismiss();
+                        EasyLoading.showToast("Please fill all the fields");
+                      } else {
                         BlocProvider.of<UpdateProfileCubit>(context)
                             .updateProfile(profileName.text,
                                 profileMobileNumber.text, profileAddress.text)

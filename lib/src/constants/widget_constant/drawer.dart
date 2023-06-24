@@ -2,6 +2,7 @@ import 'dart:js_interop';
 
 import 'package:donationapp/src/bloc/HistoryBloc/history_cubit.dart';
 import 'package:donationapp/src/bloc/LoginStatus/loginstatus_cubit.dart';
+import 'package:donationapp/src/bloc/ReliefCampBloc/relief_camp_cubit.dart';
 import 'package:donationapp/src/bloc/StatusBloc/status_cubit.dart';
 import 'package:donationapp/src/constants/widget_constant/space.dart';
 import 'package:donationapp/src/constants/widget_constant/text_widget.dart';
@@ -50,10 +51,10 @@ class MyDrawer extends StatelessWidget {
                                     ),
                                     Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         TextWidget(
-                                            text: "Tengbang",
+                                            text: "Mateng",
                                             t_color: c_black_opa,
                                             fontWeight: FontWeight.w400,
                                             fontSize: 20)
@@ -78,31 +79,56 @@ class MyDrawer extends StatelessWidget {
                                 },
                                 hoverColor: Colors.grey[200], // Set hover color
                               ),
-                              ListTile(
-                                title: TextWidget(
-                                    text: "Relief Camps",
-                                    t_color: c_black_opa,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 18),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  BlocProvider.of<StatusCubit>(context)
-                                      .setReliefCamp();
+                              BlocBuilder<LoginstatusCubit, LoginstatusState>(
+                                builder: (context, state) {
+                                  return ListTile(
+                                    title: TextWidget(
+                                        text: "Relief Camps",
+                                        t_color: c_black_opa,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18),
+                                    onTap: () {
+                                      if (state.loginStatus) {
+                                        Navigator.pop(context);
+                                        BlocProvider.of<StatusCubit>(context)
+                                            .setReliefCamp();
+                                        // BlocProvider.of<ReliefCampCubit>(context)
+                                        //     .refreshReliefCamp();
+
+                                      } else {
+                                        BlocProvider.of<StatusCubit>(context)
+                                            .setLogin();
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    hoverColor: Colors
+                                        .grey[200], // Set hover color
+                                  );
                                 },
-                                hoverColor: Colors.grey[200], // Set hover color
                               ),
-                              ListTile(
-                                title: TextWidget(
-                                    text: "Donate",
-                                    t_color: c_black_opa,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 18),
-                                onTap: () {
-                                  BlocProvider.of<StatusCubit>(context)
-                                      .setDonate();
-                                  Navigator.pop(context);
+                              BlocBuilder<LoginstatusCubit, LoginstatusState>(
+                                builder: (context, state) {
+                                  return ListTile(
+                                    title: TextWidget(
+                                        text: "Donate",
+                                        t_color: c_black_opa,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18),
+                                    onTap: () {
+                                      if (state.loginStatus) {
+                                        BlocProvider.of<StatusCubit>(context)
+                                            .setDonate();
+                                        Navigator.pop(context);
+                                      } else {
+                                        BlocProvider.of<StatusCubit>(context)
+                                            .setLogin();
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    hoverColor: Colors
+                                        .grey[200], // Set hover color
+                                  );
                                 },
-                                hoverColor: Colors.grey[200], // Set hover color
                               ),
                               BlocBuilder<LoginstatusCubit, LoginstatusState>(
                                 builder: (context, state) {
@@ -126,7 +152,7 @@ class MyDrawer extends StatelessWidget {
                                       }
                                     },
                                     hoverColor:
-                                        Colors.grey[200], // Set hover color
+                                    Colors.grey[200], // Set hover color
                                   );
                                 },
                               ),
@@ -146,7 +172,8 @@ class MyDrawer extends StatelessWidget {
                                         // await Store.clear(context);
                                         // BlocProvider.of<LoginstatusCubit>(
                                         //     context).setLogout();
-                                        BlocProvider.of<StatusCubit>(context).setProfile();
+                                        BlocProvider.of<StatusCubit>(context)
+                                            .setProfile();
                                         // BlocProvider.of<ProfileCubit>(context)
                                         //     .getProfileData().then((value){
                                         //       BlocProvider.of<StatusCubit>(context).setProfile();
@@ -160,7 +187,7 @@ class MyDrawer extends StatelessWidget {
                                       }
                                     },
                                     hoverColor:
-                                        Colors.grey[200], // Set hover color
+                                    Colors.grey[200], // Set hover color
                                   );
                                 },
                               ),

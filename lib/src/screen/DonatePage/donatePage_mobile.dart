@@ -49,7 +49,7 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
   // At the beginning, we fetch the first 20 posts
   int _page = 1;
   // you can change this value to fetch more or less posts per page (10, 15, 5, etc)
-  final int _limit = 100000000;
+  final int _limit = 10000000;
 
   // There is next page or not
   bool _hasNextPage = true;
@@ -681,7 +681,17 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
                                                                                   ),
                                                                                   SizedBox(
                                                                                     width: getProportionateScreenWidth(250),
-                                                                                    child: TextWidget(text: "Account Name : ${state.response[index]["account_name"]}", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 13),
+                                                                                    child: Row(
+                                                                                      children: [
+                                                                                        TextWidget(text: "Account Name : ${state.response[index]["account_name"]}", t_color: c_black, fontWeight: FontWeight.w600, fontSize: 13),
+                                                                                        InkWell(
+                                                                                          onTap: (){
+                                                                                            EasyLoading.showToast("hh");
+                                                                                          },
+                                                                                          child: Icon(Icons.copy_rounded,size: 10,color: c_black,),
+                                                                                        )
+                                                                                      ],
+                                                                                    ),
                                                                                   ),
                                                                                   Space(
                                                                                     height: 5,
@@ -1238,23 +1248,26 @@ class _DonatePageMobileState extends State<DonatePageMobile> {
             MouseRegion(
               child: InkWell(
                   onTap: () {
-                    if (createName.text.isEmpty ||
-                        createMobileNumber.text.isEmpty ||
-                        createAddress.text.isEmpty) {
-                      EasyLoading.dismiss();
-                      EasyLoading.showToast("Please fill all the fields");
-                    } else {
-                      if(!updateEnable){
-                        setState(() {
-                          updateEnable = true;
-                        });
-                      }else if(updateEnable){
-                        BlocProvider.of<UpdateProfileCubit>(context).updateProfile(profileName.text, profileMobileNumber.text, profileAddress.text).then((value){
-                          if(value){
+                    if (!updateEnable) {
+                      setState(() {
+                        updateEnable = true;
+                      });
+                    } else if (updateEnable) {
+                      if (
+                      profileName.text.isEmpty ||
+                          profileMobileNumber.text.isEmpty ||
+                          profileAddress.text.isEmpty
+                      ) {
+                        EasyLoading.dismiss();
+                        EasyLoading.showToast("Please fill all the fields");
+                      } else {
+                        BlocProvider.of<UpdateProfileCubit>(context)
+                            .updateProfile(profileName.text,
+                            profileMobileNumber.text, profileAddress.text)
+                            .then((value) {
+                          if (value) {
                             updateEnable = false;
-                            setState(() {
-
-                            });
+                            setState(() {});
                           }
                         });
                       }

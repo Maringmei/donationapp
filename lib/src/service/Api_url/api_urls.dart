@@ -26,6 +26,10 @@ abstract class ApiURL {
   static const updateprofileUrl = "/api/sites/updateprofile";
   static const reliefcampListUrl = "/api/beneficiaries/reliefcamp";
 
+  static const testUrl = "https://reliefcamp.globizsapp.com/api/webhooks/ivr";
+
+
+
 
 
 
